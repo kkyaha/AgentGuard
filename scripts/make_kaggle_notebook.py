@@ -55,7 +55,14 @@ WORK = "/kaggle/working/frameguard"
 """)
 
 code("""
-!nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
+# Dừng sớm nếu phiên không có GPU (tránh chạy CPU 15 phút rồi mới lỗi)
+import subprocess
+r = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total,compute_cap", "--format=csv"], capture_output=True, text=True) \\
+    if __import__("shutil").which("nvidia-smi") else None
+if r is None or r.returncode != 0:
+    raise SystemExit("KHÔNG CÓ GPU. Vào Session options -> Accelerator -> GPU T4 x2 "
+                     "(cần xác minh số điện thoại; kiểm tra quota GPU còn lại ở kaggle.com/settings), rồi commit lại.")
+print(r.stdout)
 """)
 
 code(f"""
