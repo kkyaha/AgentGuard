@@ -1,4 +1,18 @@
-# Dự án: Phục hồi sau khi bị chặn cho LLM agent cỡ nhỏ (SOPBench)
+# FrameGuard — phản hồi theo DECLARE giúp LLM agent cỡ nhỏ phục hồi sau khi bị chặn
+
+Khung Gate tất định dùng chung cho nhiều benchmark tuân thủ quy trình (SOP). Benchmark đầu tiên: SOPBench;
+sau đó SOP-Bench (Amazon), τ²-bench để kiểm tra tổng quát hóa.
+
+## Kiến trúc khung (lõi tách khỏi bộ dữ liệu)
+```
+frameguard/          lõi, không biết bộ dữ liệu: ir.py (luật trung gian DECLARE), gate.py (Gate + FrameState),
+                     align.py, feedback.py (bare/reason/next_action/template/alignment), log.py, metrics.py
+adapters/<bench>/    mỗi benchmark 4 phần: luật → IR, diễn giải kết quả tool, điểm móc vào chỗ thực thi tool, gọi oracle
+analysis/            phân tích offline (giai đoạn 1)
+```
+- Gate là **middleware chèn vào chỗ thực thi tool** của harness có sẵn, không tự viết vòng lặp agent (giữ baseline so được).
+- Luật viết/biên dịch theo domain, không theo task. Benchmark có luật dạng văn bản: hình thức hóa offline, người kiểm duyệt, báo cáo độ chính xác.
+- Bài 1 chỉ cài adapter SOPBench; adapter thứ hai là thí nghiệm tổng quát hóa.
 
 ## Mục tiêu
 Nghiên cứu Agentic BPM (thách thức X3 – giải thích có thể hành động – trong APM Manifesto).

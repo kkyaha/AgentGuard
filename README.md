@@ -1,7 +1,11 @@
-# Phục hồi sau khi bị chặn cho LLM agent cỡ nhỏ (SOPBench)
+# FrameGuard
 
-Nghiên cứu Agentic BPM: phản hồi sinh theo ngữ nghĩa ràng buộc DECLARE (template + alignment)
-có giúp model open-weight 3–8B hoàn thành task sau khi bị một gate tất định chặn không?
+**DECLARE-based recovery feedback for small LLM agents.**
+Khung Gate tất định, dùng chung cho nhiều benchmark tuân thủ quy trình (SOP): khi agent gọi tool vi phạm luật,
+Gate chặn và trả phản hồi sinh từ template DECLARE / alignment để agent tự sửa.
+
+Câu hỏi nghiên cứu (Agentic BPM): phản hồi theo ngữ nghĩa ràng buộc có giúp model open-weight 3–8B
+hoàn thành task sau khi bị chặn không? Benchmark đầu tiên: SOPBench; tiếp theo SOP-Bench (Amazon), τ²-bench.
 Mô tả đầy đủ, câu hỏi nghiên cứu và quyết định thiết kế: [`CLAUDE.md`](CLAUDE.md).
 Kết quả hiện tại: [`analysis/FINDINGS.md`](analysis/FINDINGS.md).
 
