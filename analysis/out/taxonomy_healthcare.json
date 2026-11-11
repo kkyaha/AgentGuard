@@ -1,0 +1,2234 @@
+{
+ "rows": {
+  "qwen2.5-7b-instruct-mode_react": {
+   "n": 124,
+   "pass": 21,
+   "labels": {
+    "A_skipped_precondition": 33,
+    "OK": 21,
+    "C_partial_check_then_acted": 23,
+    "A_no_check_acted": 33,
+    "R_called_but_failed": 3,
+    "R_gave_up_partial": 6,
+    "F_format_tool_error": 5
+   }
+  },
+  "llama3.1-8b-instruct-mode_react": {
+   "n": 124,
+   "pass": 25,
+   "labels": {
+    "A_skipped_precondition": 20,
+    "OK": 25,
+    "C_partial_check_then_acted": 18,
+    "F_format_tool_error": 26,
+    "R_gave_up_partial": 13,
+    "A_no_check_acted": 18,
+    "R_called_but_failed": 4
+   }
+  },
+  "qwen3.5-2b-mode_fc": {
+   "n": 124,
+   "pass": 77,
+   "labels": {
+    "OK": 77,
+    "C_partial_check_then_acted": 8,
+    "A_no_check_acted": 9,
+    "A_skipped_precondition": 13,
+    "R_called_but_failed": 3,
+    "R_gave_up_partial": 9,
+    "A_order_other_action": 3,
+    "V_other_action_violated": 1,
+    "F_format_tool_error": 1
+   }
+  },
+  "qwen3.5-4b-mode_fc": {
+   "n": 124,
+   "pass": 105,
+   "labels": {
+    "OK": 105,
+    "A_no_check_acted": 4,
+    "R_called_but_failed": 3,
+    "V_other_action_violated": 1,
+    "A_skipped_precondition": 1,
+    "R_gave_up_partial": 5,
+    "C_partial_check_then_acted": 5
+   }
+  },
+  "gemma-4-e2b-it-mode_fc": {
+   "n": 124,
+   "pass": 82,
+   "labels": {
+    "OK": 82,
+    "A_skipped_precondition": 17,
+    "A_no_check_acted": 19,
+    "R_called_but_failed": 3,
+    "V_other_action_violated": 1,
+    "R_gave_up_partial": 2
+   }
+  },
+  "gemma-4-e4b-it-mode_fc": {
+   "n": 124,
+   "pass": 96,
+   "labels": {
+    "OK": 96,
+    "A_skipped_precondition": 12,
+    "A_no_check_acted": 7,
+    "R_gave_up_partial": 3,
+    "C_partial_check_then_acted": 2,
+    "R_called_but_failed": 3,
+    "V_other_action_violated": 1
+   }
+  },
+  "gpt-4o-mode_fc": {
+   "n": 124,
+   "pass": 91,
+   "labels": {
+    "A_skipped_precondition": 5,
+    "OK": 91,
+    "R_gave_up_partial": 12,
+    "C_partial_check_then_acted": 8,
+    "F_format_tool_error": 3,
+    "A_order_other_action": 2,
+    "A_no_check_acted": 3
+   }
+  },
+  "o4-mini-high-mode_fc": {
+   "n": 124,
+   "pass": 115,
+   "labels": {
+    "OK": 115,
+    "A_skipped_precondition": 1,
+    "R_called_but_failed": 3,
+    "V_other_action_violated": 1,
+    "R_no_call_at_all": 2,
+    "R_gave_up_partial": 1,
+    "A_no_check_acted": 1
+   }
+  },
+  "gpt-5-mode_fc": {
+   "n": 124,
+   "pass": 95,
+   "labels": {
+    "OK": 95,
+    "R_gave_up_partial": 13,
+    "R_called_but_failed": 3,
+    "V_other_action_violated": 1,
+    "R_no_call_at_all": 12
+   }
+  }
+ },
+ "per_task": {
+  "0": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "add_authorized_provider",
+    true,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_skipped_precondition",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "1": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "add_authorized_provider",
+    false,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "A_skipped_precondition",
+   "gpt-5-mode_fc": "OK"
+  },
+  "2": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "add_authorized_provider",
+    false,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "3": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "add_authorized_provider",
+    false,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "4": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "add_authorized_provider",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "5": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "add_authorized_provider",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "6": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "appeal_claim",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "R_gave_up_partial",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "7": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "appeal_claim",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "8": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "appeal_claim",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_skipped_precondition",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "9": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "appeal_claim",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "10": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "appeal_claim",
+    true,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "11": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "appeal_claim",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "A_no_check_acted",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "C_partial_check_then_acted",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "12": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "appeal_claim",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "13": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "deactivate_policy",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "14": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "deactivate_policy",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "15": {
+   "qwen2.5-7b-instruct-mode_react": "R_called_but_failed",
+   "_meta": [
+    "get_claim_details",
+    true,
+    "single",
+    1
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_called_but_failed",
+   "qwen3.5-2b-mode_fc": "R_called_but_failed",
+   "qwen3.5-4b-mode_fc": "R_called_but_failed",
+   "gemma-4-e2b-it-mode_fc": "R_called_but_failed",
+   "gemma-4-e4b-it-mode_fc": "R_called_but_failed",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "R_called_but_failed",
+   "gpt-5-mode_fc": "R_called_but_failed"
+  },
+  "16": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "get_claim_details",
+    false,
+    "single",
+    1
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "V_other_action_violated",
+   "gemma-4-e2b-it-mode_fc": "V_other_action_violated",
+   "gemma-4-e4b-it-mode_fc": "V_other_action_violated",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "V_other_action_violated",
+   "gpt-5-mode_fc": "V_other_action_violated"
+  },
+  "17": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "get_claim_details",
+    false,
+    "single",
+    1
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "18": {
+   "qwen2.5-7b-instruct-mode_react": "R_called_but_failed",
+   "_meta": [
+    "get_policy_details",
+    true,
+    "single",
+    1
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_called_but_failed",
+   "qwen3.5-2b-mode_fc": "R_called_but_failed",
+   "qwen3.5-4b-mode_fc": "R_called_but_failed",
+   "gemma-4-e2b-it-mode_fc": "R_called_but_failed",
+   "gemma-4-e4b-it-mode_fc": "R_called_but_failed",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "R_called_but_failed",
+   "gpt-5-mode_fc": "R_called_but_failed"
+  },
+  "19": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "get_policy_details",
+    false,
+    "single",
+    1
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "A_skipped_precondition",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "20": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "get_policy_details",
+    false,
+    "single",
+    1
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "21": {
+   "qwen2.5-7b-instruct-mode_react": "R_called_but_failed",
+   "_meta": [
+    "get_provider_details",
+    true,
+    "none",
+    0
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_called_but_failed",
+   "qwen3.5-2b-mode_fc": "R_called_but_failed",
+   "qwen3.5-4b-mode_fc": "R_called_but_failed",
+   "gemma-4-e2b-it-mode_fc": "R_called_but_failed",
+   "gemma-4-e4b-it-mode_fc": "R_called_but_failed",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "R_called_but_failed",
+   "gpt-5-mode_fc": "R_called_but_failed"
+  },
+  "22": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "reactivate_policy",
+    true,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "R_gave_up_partial",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "F_format_tool_error",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "23": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "reactivate_policy",
+    false,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "F_format_tool_error",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "24": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "reactivate_policy",
+    false,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "25": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "reactivate_policy",
+    false,
+    "and+chain",
+    3
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "A_order_other_action",
+   "qwen3.5-4b-mode_fc": "C_partial_check_then_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "26": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "reactivate_policy",
+    true,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "F_format_tool_error",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "27": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "reactivate_policy",
+    false,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "28": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "29": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "30": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "R_no_call_at_all",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "31": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "32": {
+   "qwen2.5-7b-instruct-mode_react": "R_gave_up_partial",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "R_gave_up_partial",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "33": {
+   "qwen2.5-7b-instruct-mode_react": "R_gave_up_partial",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "R_gave_up_partial",
+   "gemma-4-e2b-it-mode_fc": "R_gave_up_partial",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "R_gave_up_partial",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "34": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "35": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "A_skipped_precondition",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "36": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "37": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "38": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "39": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "40": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "41": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "42": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "43": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "R_gave_up_partial",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "R_no_call_at_all",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "44": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "45": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "46": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "47": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_order_other_action",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "48": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_skipped_precondition",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "49": {
+   "qwen2.5-7b-instruct-mode_react": "R_gave_up_partial",
+   "_meta": [
+    "schedule_appointment",
+    true,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "50": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "51": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "52": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "53": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "54": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "schedule_appointment",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "55": {
+   "qwen2.5-7b-instruct-mode_react": "F_format_tool_error",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "56": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "A_no_check_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "57": {
+   "qwen2.5-7b-instruct-mode_react": "F_format_tool_error",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "A_skipped_precondition",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "58": {
+   "qwen2.5-7b-instruct-mode_react": "F_format_tool_error",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "A_order_other_action",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "59": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "60": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "C_partial_check_then_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "61": {
+   "qwen2.5-7b-instruct-mode_react": "F_format_tool_error",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "62": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "63": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "64": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "C_partial_check_then_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "A_no_check_acted",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "65": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "C_partial_check_then_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "A_no_check_acted",
+   "gpt-5-mode_fc": "OK"
+  },
+  "66": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    10
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "67": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "68": {
+   "qwen2.5-7b-instruct-mode_react": "F_format_tool_error",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "69": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "A_order_other_action",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "70": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "71": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "72": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "R_gave_up_partial",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "73": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "submit_claim",
+    true,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "V_other_action_violated",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "74": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "A_no_check_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "75": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "A_no_check_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "C_partial_check_then_acted",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "76": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "77": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "78": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "submit_claim",
+    false,
+    "and+chain+or",
+    11
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "C_partial_check_then_acted",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "79": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "80": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "81": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "82": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "83": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "84": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    4
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "85": {
+   "qwen2.5-7b-instruct-mode_react": "R_gave_up_partial",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "86": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "87": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_no_check_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "88": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "R_gave_up_partial",
+   "gemma-4-e4b-it-mode_fc": "R_gave_up_partial",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "89": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "90": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_order_other_action",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "91": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "92": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "93": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "94": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "95": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "96": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "97": {
+   "qwen2.5-7b-instruct-mode_react": "R_gave_up_partial",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "A_skipped_precondition",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "98": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_no_check_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "99": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    5
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "100": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "101": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "102": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    6
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "103": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_gave_up_partial"
+  },
+  "104": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "C_partial_check_then_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "105": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "106": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "107": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_gave_up_partial",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "108": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "A_no_check_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "A_no_check_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "109": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "110": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "111": {
+   "qwen2.5-7b-instruct-mode_react": "R_gave_up_partial",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "R_called_but_failed",
+   "qwen3.5-2b-mode_fc": "A_skipped_precondition",
+   "qwen3.5-4b-mode_fc": "R_gave_up_partial",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "112": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "C_partial_check_then_acted",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "113": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "114": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    8
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "F_format_tool_error",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "115": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_skipped_precondition",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_skipped_precondition",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "116": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "117": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "A_no_check_acted",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "118": {
+   "qwen2.5-7b-instruct-mode_react": "OK",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    7
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "119": {
+   "qwen2.5-7b-instruct-mode_react": "A_skipped_precondition",
+   "_meta": [
+    "update_policy",
+    true,
+    "and+chain",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "R_gave_up_partial",
+   "gpt-4o-mode_fc": "R_gave_up_partial",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "R_no_call_at_all"
+  },
+  "120": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "121": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "A_no_check_acted",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "122": {
+   "qwen2.5-7b-instruct-mode_react": "C_partial_check_then_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "OK",
+   "qwen3.5-2b-mode_fc": "OK",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  },
+  "123": {
+   "qwen2.5-7b-instruct-mode_react": "A_no_check_acted",
+   "_meta": [
+    "update_policy",
+    false,
+    "and+chain",
+    9
+   ],
+   "llama3.1-8b-instruct-mode_react": "F_format_tool_error",
+   "qwen3.5-2b-mode_fc": "C_partial_check_then_acted",
+   "qwen3.5-4b-mode_fc": "OK",
+   "gemma-4-e2b-it-mode_fc": "OK",
+   "gemma-4-e4b-it-mode_fc": "OK",
+   "gpt-4o-mode_fc": "OK",
+   "o4-mini-high-mode_fc": "OK",
+   "gpt-5-mode_fc": "OK"
+  }
+ },
+ "gap_tasks": [
+  19,
+  64
+ ]
+}

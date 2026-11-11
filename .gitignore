@@ -1,0 +1,16 @@
+# Môi trường Python
+.venv/
+__pycache__/
+*.pyc
+
+# Mã nguồn bên ngoài (clone lại bằng scripts/setup.sh)
+external/
+
+# Bí mật / cấu hình cục bộ
+.env
+*.key
+
+# Hệ điều hành / editor
+.DS_Store
+.idea/
+.vscode/
