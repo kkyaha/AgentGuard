@@ -83,6 +83,8 @@ python -c "import vllm, torch; print('vllm', vllm.__version__, '| torch', torch.
 md("## Mã FrameGuard (nhúng sẵn, sinh từ repo)")
 for rel in FILES:
     src = open(os.path.join(ROOT, rel), encoding="utf-8").read()
+    if not src.strip():
+        src = "# (file trống)\n"   # %%writefile báo lỗi nếu thân ô trống
     code(f"%%writefile /kaggle/working/frameguard/{rel}\n{src}")
     # %%writefile cần thư mục tồn tại -> tạo trước
 cells.insert([i for i, c in enumerate(cells) if c["cell_type"] == "markdown" and "Mã FrameGuard" in "".join(c["source"])][0] + 1,
