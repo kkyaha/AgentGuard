@@ -16,15 +16,16 @@ def group(v):
     if t == "Existence": return "G6 Không hoàn thành: chưa thử" if k == "never_attempted" else "G7 Không hoàn thành: gọi nhưng thất bại"
     return t
 
-tot = collections.defaultdict(collections.Counter); n = collections.Counter(); ok = collections.Counter()
-for f in sorted(glob.glob(os.path.join(os.path.dirname(__file__), "out", "conformance_*.json"))):
-    for t in json.load(open(f))["traces"]:
-        n[t["model"]] += 1; ok[t["model"]] += t["oracle_success"]
-        if not t["oracle_success"]: tot[t["model"]][group(t["violations"])] += 1
-groups = sorted({g for c in tot.values() for g in c})
-print("Tỷ lệ (% trên số trace THẤT BẠI), 7 domain, đã loại task không giải được\n")
-print(f"{'model':32s} {'pass':>6s} {'#fail':>6s} " + " ".join(f"{g[:3]:>5s}" for g in groups))
-for m in SMALL + STRONG:
-    fail = n[m] - ok[m]
-    print(f"{m:32s} {ok[m]/n[m]:6.1%} {fail:6d} " + " ".join(f"{tot[m][g]/fail:5.0%}" for g in groups))
-print(); [print(" ", g) for g in groups]
+if __name__ == "__main__":
+    tot = collections.defaultdict(collections.Counter); n = collections.Counter(); ok = collections.Counter()
+    for f in sorted(glob.glob(os.path.join(os.path.dirname(__file__), "out", "conformance_*.json"))):
+        for t in json.load(open(f))["traces"]:
+            n[t["model"]] += 1; ok[t["model"]] += t["oracle_success"]
+            if not t["oracle_success"]: tot[t["model"]][group(t["violations"])] += 1
+    groups = sorted({g for c in tot.values() for g in c})
+    print("Tỷ lệ (% trên số trace THẤT BẠI), 7 domain, đã loại task không giải được\n")
+    print(f"{'model':32s} {'pass':>6s} {'#fail':>6s} " + " ".join(f"{g[:3]:>5s}" for g in groups))
+    for m in SMALL + STRONG:
+        fail = n[m] - ok[m]
+        print(f"{m:32s} {ok[m]/n[m]:6.1%} {fail:6d} " + " ".join(f"{tot[m][g]/fail:5.0%}" for g in groups))
+    print(); [print(" ", g) for g in groups]

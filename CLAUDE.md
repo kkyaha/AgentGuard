@@ -115,7 +115,8 @@ Nguồn luật trong SOPBench (đã kiểm tra với code):
 2. ✅ `analysis/conformance.py`: phát lại trajectory công bố, kiểm định với oracle (khớp 93–100%).
 3. ✅ Bảng RQ1 sơ bộ (`analysis/summarize_conformance.py`, `analysis/FINDINGS.md`); còn: tách theo domain, kiểm định thống kê.
 4. (Sau) Alignment tối ưu → chuỗi sửa tối thiểu, dùng cho phản hồi `alignment`.
-5. Đọc tay ~30 trajectory để kiểm chứng nhãn.
+5. ✅ Đọc tay 32 trajectory: nhãn đúng 78% (G1/G2/G3 đúng 20/20). Phát hiện lỗi oracle thứ 4 (mất cờ tuple) → `analysis/oracle_fix.py`.
+   G2 phần lớn là lời gọi đọc phụ với quyết định cuối đúng → báo cáo thêm pass rate không phạt lời gọi đọc phụ.
 ### Giai đoạn 2 – gate chạy trực tiếp
 6. `check_env.py` kiểm tra tool call qua API; chạy baseline Bank (tập clean) không Gate.
 7. `frame_guard.py`: `Gate` + `FrameState` + các kiểu phản hồi; chèn vào vòng lặp SOPBench.

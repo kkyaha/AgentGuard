@@ -103,6 +103,32 @@ Gate theo cách 1 (chỉ Precedence; tool tạo trạng thái chỉ tính khi k�
 thông tin đăng nhập (bank, dmv, healthcare, library, online_market, university) → đăng nhập sai vẫn được coi là đã đăng nhập.
 Oracle vẫn phạt nhờ `action_should_succeed`, nhưng trạng thái trung gian của hệ thống strict sai.
 
+## Đọc tay 32 trajectory thất bại của model nhỏ (2026-11-12)
+Mẫu phân tầng theo nhóm, seed 7 (G1:8, G1b:1, G2:6, G3:5, G4:2, G5:2, G6:3, G7:2, G0:3).
+| Nhóm | Nhãn đúng nguyên nhân | Ghi chú |
+|---|---|---|
+| G1 bỏ bước trước goal | 8/8 | gọi thẳng goal hoặc thiếu đúng bước kiểm tra; #2 còn làm tiếp sau khi login thất bại |
+| G1b | 1/1 | thiếu kiểm tra tham số thứ hai (target_owner) |
+| G2 action phụ | 6/6 | **5/6 quyết định cuối ĐÚNG** (từ chối/hoàn thành đúng), trượt chỉ vì gọi tool đọc phụ (get_order_details, check_return_date) thiếu tiền điều kiện → oracle rất chặt; liên quan RQ3 |
+| G3 kiểm rồi vẫn làm | 5/5 | đúng hơn nên gọi là "đã lấy dữ liệu nhưng phán sai" (so sánh số, ngày, tổng tiền), không phải phớt lờ kết quả False |
+| G4 | 0/2 | #21 lỗi giả: logout sau khi đóng tài khoản; #22 vị từ chỉ trên tham số, nhãn "chưa kiểm tra" vô nghĩa |
+| G5 | 1/2 | #24 thực chất là bịa tham số (new_major sai) |
+| G6 | 2/3 | #27 thực chất là bịa tên tool |
+| G7 | 0/2 | **lỗi oracle** (xem dưới): model làm đúng nhưng bị chấm trượt |
+| G0 | 2/3 | lỗi gọi tool sai tham số; #30 chưa rõ |
+Tổng: **25/32 (78%)** đúng nguyên nhân; các nhóm lớn G1/G2/G3 đúng 20/20. Sai số tập trung ở nhóm nhỏ (<15% lỗi của model nhỏ).
+
+**Lỗi oracle thứ 4:** `swarm/core.py` (bản mới) bỏ cờ của kết quả tuple `(True, value)` trước khi ghi log
+→ `action_successfully_called` luôn False với goal trả tuple → task should_succeed của các goal đó không thể pass ở mọi lượt chạy mới
+(gpt-5, o4-mini, qwen3.5, gemma-4, qwen2.5-7b, llama-8b; lượt cũ như gpt-4o ghi "(True, ...)" nên không bị).
+Sửa trong `analysis/oracle_fix.py`: pass rate tăng +0.5 đến +1.8 điểm (qwen3.5-4b 72.5→74.3, gpt-5 76.3→77.9).
+Goal should_succeed không model nào pass: dmv/update_test_status, hotel/{find_booking_info, process_guest_checkin, process_guest_checkout, show_available_rooms}, library/{add_book, check_return_date}.
+
+**Hệ quả cho giai đoạn 2:**
+- Harness của ta phải giữ cờ thành công khi ghi log và chấm bằng oracle đã sửa.
+- Lời gọi bị Gate chặn vẫn bị tính vào `max_num_actions=10` của SOPBench → phải quyết định có tính hay không và báo cáo.
+- Báo cáo pass rate hai cách: oracle gốc và oracle "không phạt lời gọi đọc phụ" (RQ3).
+
 ## Chưa làm
 - Đọc tay ~30 trajectory lỗi (kiểm chứng nhãn tự động).
 - Tìm nguyên nhân các task không giải được ở hotel/library.
