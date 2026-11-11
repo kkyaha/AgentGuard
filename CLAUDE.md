@@ -16,13 +16,13 @@ analysis/            phân tích offline (giai đoạn 1)
 
 ## Mục tiêu
 Nghiên cứu Agentic BPM (thách thức X3 – giải thích có thể hành động – trong APM Manifesto).
-Lớp kiểm soát tất định (ContrAgent, NOMOS) đã đảm bảo an toàn, nhưng model nhỏ (3–8B)
+Lớp kiểm soát tất định (ContrAgent, NOMOS) đã đảm bảo an toàn, nhưng model nhỏ (2–8B)
 thường không hoàn thành task sau khi bị chặn. Câu hỏi chính:
 **phản hồi sinh theo ngữ nghĩa ràng buộc DECLARE (template + alignment) có giúp model nhỏ phục hồi không?**
 
 Đóng góp không nằm ở việc "đưa luật vào dạng hình thức" (ContrAgent/NOMOS/Compile-Then-Page đã làm),
 mà ở: (1) chẩn đoán lỗi theo template DECLARE bị vi phạm, (2) phản hồi sinh từ template/alignment,
-(3) đo trực tiếp khả năng phục hồi trên model 3–8B — chưa công trình nào làm (đối chiếu 2026-11-11).
+(3) đo trực tiếp khả năng phục hồi trên model 2–8B — chưa công trình nào làm (đối chiếu 2026-11-11).
 
 ## Câu hỏi nghiên cứu
 - RQ1: Model nhỏ vi phạm template DECLARE nào, theo kiểu nào? Phân loại theo conformance checking:
@@ -86,7 +86,9 @@ Nguồn luật trong SOPBench (đã kiểm tra với code):
   tham số suy từ tương quan, tham số không suy được → "hỏi người dùng".
 
 ## Ràng buộc bắt buộc
-- Chỉ model **open-weight 3–8B**; không fine-tune. Qwen2.5-7B/Llama-8B chỉ có số công bố ở chế độ ReAct;
+- Chỉ model **open-weight 2–8B** (mở rộng từ 3–8B ngày 2026-11-12 để gồm qwen3.5-2b, gemma-4-e2b — hai model nhỏ nhất
+  có baseline công bố, function calling gốc, nhiều dư địa; thêm một bậc năng lực cho H3); không fine-tune.
+  Gemma-4-E2B/E4B: "E" = tham số hiệu dụng, ghi tổng tham số thật theo model card. Qwen2.5-7B/Llama-8B chỉ có số công bố ở chế độ ReAct;
   chạy chế độ function calling thì ghi rõ là không so được với mốc ~11%. Ưu tiên model còn nhiều dư địa (gemma-4-e2b, qwen3.5-2b, qwen2.5-7b).
 - Bộ kiểm soát **tất định, không gọi LLM**; trạng thái chỉ cập nhật từ kết quả tool thật.
   Bộ diễn giải kết quả tool viết theo domain/tool, không theo task.

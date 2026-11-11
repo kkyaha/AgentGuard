@@ -22,7 +22,7 @@ Agent phải tuân thủ các luật này. Nếu bỏ bước kiểm tra mà h�
 
 ### 1.3 Vấn đề của model nhỏ
 - Model lớn (GPT-5, Gemini) tuân thủ khá tốt.
-- Model **nhỏ, mã nguồn mở, 3–8 tỷ tham số** (Qwen2.5-7B, Gemma-4-e2b…) thì rất kém. Theo số liệu đã công bố, Qwen2.5-7B chỉ đạt khoảng 11% trên SOPBench.
+- Model **nhỏ, mã nguồn mở, 2–8 tỷ tham số** (Qwen2.5-7B, Gemma-4-e2b…) thì rất kém. Theo số liệu đã công bố, Qwen2.5-7B chỉ đạt khoảng 11% trên SOPBench.
 - Doanh nghiệp vẫn muốn dùng model nhỏ vì rẻ, chạy được nội bộ và giữ dữ liệu riêng tư.
 
 ### 1.4 Giải pháp hiện có: "người gác cổng" (gate)
@@ -205,9 +205,9 @@ Ngoài ra, có 18 task hotel và 6 task library mà không model nào giải đ�
 | **Compile, Then Page** | biên dịch SOP thành chương trình | không chặn; thấy hướng dẫn **làm hại** Qwen2.5-7B | preprint |
 | **Reason Less, Verify More** | gate trên τ²-bench, gpt-4o-mini | không so phản hồi, không đo phục hồi | workshop KDD |
 | **Feedback That Backfires** | model nhỏ lặp lại lời gọi lỗi | model rất nhỏ (≤1,7B), không phải gate quy trình | workshop KDD |
-| **AgentLTL** | đặc tả LTL + chặn | benchmark tổng hợp; không có model 3–8B chạy trực tiếp; không đo phục hồi | preprint |
+| **AgentLTL** | đặc tả LTL + chặn | benchmark tổng hợp; không có model 2–8B chạy trực tiếp; không đo phục hồi | preprint |
 
-**Khoảng trống của dự án:** đo **trực tiếp** trên model 3–8B, **so các kiểu phản hồi**, **đo khả năng phục hồi**, và dùng **DECLARE và alignment** để sinh phản hồi. Chưa bài nào làm đủ cả bốn điều này.
+**Khoảng trống của dự án:** đo **trực tiếp** trên model 2–8B, **so các kiểu phản hồi**, **đo khả năng phục hồi**, và dùng **DECLARE và alignment** để sinh phản hồi. Chưa bài nào làm đủ cả bốn điều này.
 
 ---
 
