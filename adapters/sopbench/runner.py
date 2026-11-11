@@ -180,6 +180,7 @@ def main():
     user = Agent(name="user", client=None, default_response="", response_repeat=True)
 
     summary = []
+    n_err = 0
     try:
         for mode in a.modes.split(","):
             out_dir = os.path.join(a.out, a.domain, run_name, mode)
@@ -202,6 +203,12 @@ def main():
                 except Exception as e:
                     traceback.print_exc()
                     res = {"interaction": [], "database": task["initial_database"], "error": repr(e)}
+                    n_err += 1
+                    print(f"[frameguard] LỖI task {i}: {e!r}", flush=True)
+                    if n_err >= 3:
+                        raise SystemExit("[frameguard] DỪNG: 3 task liên tiếp lỗi — xem traceback ở trên.")
+                else:
+                    n_err = 0
                 inter = res["interaction"]
                 for m in inter:
                     m.pop("role", None)
@@ -209,7 +216,7 @@ def main():
                 gs = CURRENT_GATE.summary()
                 s = {"task": i, "goal": task["user_goal"], "should_succeed": task["action_should_succeed"], "mode": mode,
                      "success": ev["success"], "success_fixed": ev["success_fixed"], "n_blocked": gs["n_blocked"],
-                     "n_repeat_blocked": gs["n_repeat_blocked"], "n_tool_calls": ev["num_function_calls"],
+                     "n_repeat_blocked": gs["n_repeat_blocked"], "n_tool_calls": ev["num_function_calls"], "error": res.get("error"),
                      "seconds": round(time.time() - t0, 1)}
                 json.dump({"config": {"model": run_name, "domain": a.domain, "mode": mode, "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
                                       "thinking": {"qwen": os.getenv("QWEN35_THINKING"), "gemma": os.getenv("GEMMA4_THINKING")},

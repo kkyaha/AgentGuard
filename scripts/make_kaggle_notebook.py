@@ -104,12 +104,20 @@ md("""
 Nếu lỗi ở đây: xem log `[frameguard] vllm cmd` và thông báo của vLLM (thiếu bộ nhớ → bật `VLLM_MAX_MODEL_LEN`).
 """)
 code("""
-!cd /kaggle/working/frameguard && python adapters/sopbench/runner.py --model $MODEL --domain $DOMAIN --modes none --task_set 8 2>&1 | grep -E "frameguard|Error|error|mode |^none" | tail -20
+!cd /kaggle/working/frameguard && python adapters/sopbench/runner.py --model $MODEL --domain $DOMAIN --modes none --task_set 8 > /kaggle/working/step1.log 2>&1; grep -E "frameguard|Traceback|Error|error|CUDA|memory|^none" /kaggle/working/step1.log | tail -40
 """.replace("$MODEL", "{MODEL}").replace("$DOMAIN", "{DOMAIN}"))
 
+md("""
+**Kiểm tra trước khi sang Bước 2:** mỗi task phải mất khoảng ≥ 30 giây và GPU memory (cột phải) khoảng 13–14 GB.
+Nếu task chỉ mất vài giây → đang lỗi: xem ô chẩn đoán ngay dưới.
+""")
+code("""
+# Chẩn đoán: 60 dòng cuối của log vLLM / runner (gửi đoạn này nếu có lỗi)
+!tail -60 /kaggle/working/step1.log
+""")
 md("## Bước 2 — thử nhanh: 12 task × các chế độ")
 code("""
-!cd /kaggle/working/frameguard && python adapters/sopbench/runner.py --model {MODEL} --domain {DOMAIN} --modes {MODES} --task_set {TASK_SET} 2>&1 | grep -E "^\\[frameguard\\] (none|bare|reason|next|template|align)|^mode|^none|^bare|^reason|^next|^template|^alignment|phục hồi"
+!cd /kaggle/working/frameguard && python adapters/sopbench/runner.py --model {MODEL} --domain {DOMAIN} --modes {MODES} --task_set {TASK_SET} > /kaggle/working/step2.log 2>&1; grep -E "^\\[frameguard\\]|^mode|^none|^bare|^reason|^next|^template|^alignment|phục hồi|Traceback|Error" /kaggle/working/step2.log | tail -80
 """)
 
 md("## Bước 3 — đọc kết quả")
@@ -139,7 +147,8 @@ for m in by:
 """)
 
 code("""
-!cd /kaggle/working && zip -qr frameguard_runs.zip frameguard/runs && ls -lh frameguard_runs.zip
+!tail -40 /kaggle/working/step2.log
+!cd /kaggle/working && zip -qr frameguard_runs.zip frameguard/runs step1.log step2.log && ls -lh frameguard_runs.zip
 """)
 
 md("""
