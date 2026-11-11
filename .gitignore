@@ -14,3 +14,6 @@ external/
 .DS_Store
 .idea/
 .vscode/
+
+# Kết quả chạy model (lớn)
+runs/
