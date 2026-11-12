@@ -105,6 +105,20 @@ class ReplayHandler(lh.OpenAIHandler):  # kế thừa để qua kiểm tra kiể
         pass
 
 
+# ------------------------------------------------------------------ phiên bản code: chỉ dùng lại kết quả cũ khi cùng code + cấu hình
+import hashlib  # noqa: E402
+
+CODE_FILES = ["frameguard/gate.py", "frameguard/feedback.py", "adapters/sopbench/runner.py", "analysis/alignment.py",
+              "analysis/conformance.py", "analysis/declare_rules.py", "analysis/oracle_fix.py"]
+
+
+def code_version():
+    h = hashlib.sha1()
+    for rel in CODE_FILES:
+        h.update(open(os.path.join(ROOT, rel), "rb").read())
+    return h.hexdigest()[:12]
+
+
 # ------------------------------------------------------------------ chạy
 def sop_args(a):
     argv = ["--domain", a.domain, "--assistant_model", a.model or "replay", "--tool_call_mode", "fc",
@@ -139,13 +153,26 @@ def select(a):
     return [int(x) for x in a.task_set.split(",")]
 
 
+BLOCK_PREFIX = "Error: the call to `"   # mọi tin nhắn phản hồi của Gate bắt đầu bằng chuỗi này
+
+
 def evaluate(domain, task, interaction, database):
-    func_calls = [{"tool_name": c["name"], "arguments": c["args"], "content": c["result"]}
-                  for c in C.extract_calls(interaction)]
-    ev = evaluator_function_directed_graph(domain, task, interaction, func_calls, {"final_database": database}, "full")
+    """Chấm bằng oracle SOPBench trên các lời gọi ĐÃ THỰC THI.
+    Lời gọi bị Gate chặn không chạy → loại khỏi danh sách (oracle mặc định mọi lời gọi trong log đều đã chạy).
+    Ghi thêm success_with_blocked (giữ lời gọi bị chặn) để minh bạch."""
+    calls = C.extract_calls(interaction)
+    executed = [c for c in calls if not str(c["result"]).startswith(BLOCK_PREFIX)]
+
+    def run(cs):
+        fc = [{"tool_name": c["name"], "arguments": c["args"], "content": c["result"]} for c in cs]
+        return evaluator_function_directed_graph(domain, task, interaction, fc, {"final_database": database}, "full")
+
+    ev = run(executed)
     asc_fixed = goal_succeeded_fixed(task, interaction)
     ev["success_fixed"] = (ev["no_tool_call_error"] and ev["constraint_not_violated"] and ev["database_match"]
                            and ev["dirgraph_satisfied"] and asc_fixed == task["action_should_succeed"])
+    ev["success_with_blocked"] = run(calls)["success"]
+    ev["n_blocked_in_log"] = len(calls) - len(executed)
     return ev
 
 
@@ -163,6 +190,9 @@ def main():
     p.add_argument("--out", default=os.path.join(ROOT, "runs"))
     a = p.parse_args()
 
+    global CODE_VERSION
+    CODE_VERSION = code_version()
+    print(f"[frameguard] code_version={CODE_VERSION}", flush=True)
     args = sop_args(a)
     tasks = load_tasks(a.domain)
     ids = select(a)
@@ -187,9 +217,14 @@ def main():
             os.makedirs(out_dir, exist_ok=True)
             for i in ids:
                 f = os.path.join(out_dir, f"task_{i:04d}.json")
-                if os.path.exists(f):           # chạy tiếp được khi phiên bị ngắt
-                    summary.append(json.load(open(f))["summary"])
-                    continue
+                if os.path.exists(f):           # chạy tiếp khi phiên bị ngắt — chỉ khi cùng code + cấu hình
+                    old = json.load(open(f))
+                    oc = old.get("config", {})
+                    if (oc.get("code_version") == CODE_VERSION and oc.get("max_tokens") == a.max_tokens
+                            and oc.get("max_actions") == a.max_actions and oc.get("vllm_dtype") == os.getenv("VLLM_DTYPE", "bfloat16")):
+                        summary.append(old["summary"])
+                        continue
+                    print(f"[frameguard] task {i} ({mode}): file cũ khác phiên bản code/cấu hình -> chạy lại", flush=True)
                 task = copy.deepcopy(tasks[i])
                 CURRENT_GATE = Gate(load_rules(a.domain, task), mode)
                 if a.fake_replay:
@@ -215,10 +250,10 @@ def main():
                 ev = evaluate(a.domain, task, inter, res["database"])
                 gs = CURRENT_GATE.summary()
                 s = {"task": i, "goal": task["user_goal"], "should_succeed": task["action_should_succeed"], "mode": mode,
-                     "success": ev["success"], "success_fixed": ev["success_fixed"], "n_blocked": gs["n_blocked"],
+                     "success": ev["success"], "success_fixed": ev["success_fixed"], "success_with_blocked": ev["success_with_blocked"], "n_blocked": gs["n_blocked"],
                      "n_repeat_blocked": gs["n_repeat_blocked"], "n_tool_calls": ev["num_function_calls"], "error": res.get("error"),
                      "seconds": round(time.time() - t0, 1)}
-                json.dump({"config": {"model": run_name, "domain": a.domain, "mode": mode, "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
+                json.dump({"config": {"model": run_name, "domain": a.domain, "mode": mode, "code_version": CODE_VERSION, "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
                                       "thinking": {"qwen": os.getenv("QWEN35_THINKING"), "gemma": os.getenv("GEMMA4_THINKING")},
                                       "max_tokens": a.max_tokens, "max_actions": a.max_actions},
                            "task": task, "interaction": inter, "database": res["database"], "evaluation": ev,

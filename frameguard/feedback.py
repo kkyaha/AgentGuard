@@ -12,13 +12,18 @@ def _args(a):
     return ", ".join(f"{k}={json.dumps(v)}" for k, v in a.items())
 
 
-def render(mode, blocked, violations, moves, failed_state):
+def render(mode, blocked, violations, moves, failed_state, alternative=()):
     """
     blocked       : tên tool bị chặn
     violations    : [(template, (sources...), kind)] — ràng buộc DECLARE chưa thỏa
     moves         : chuỗi sửa tối thiểu (alignment.Move), theo thứ tự
     failed_state  : tool tạo trạng thái đã gọi nhưng thất bại (vd login_user trả False)
+    alternative   : đường thay thế cho tool phụ bị chặn, từ nhánh `or` của goal (Branched/Choice Precedence)
     """
+    alt = ""
+    if alternative:
+        alt = ("\nAlternative: if you cannot complete these steps (for example, missing credentials), you do not need "
+               f"`{blocked}`; instead call " + ", then ".join(f"`{m.tool}`({_args(m.args)})" for m in alternative) + ".")
     if mode == "bare":
         return f"Error: the call to `{blocked}` was blocked."
     if mode == "reason":
@@ -43,7 +48,7 @@ def render(mode, blocked, violations, moves, failed_state):
                 alts = " or ".join(f"`{s}`" for s in src)
                 lines.append(f"- You must successfully call one of {alts} before `{blocked}`.")
         lines.append("Do not repeat the blocked call unchanged.")
-        return "\n".join(lines)
+        return "\n".join(lines) + alt
     if mode == "alignment":
         if failed_state:
             return (f"Error: the call to `{blocked}` was blocked. `{failed_state[0]}` was called but did not succeed, "
@@ -55,5 +60,5 @@ def render(mode, blocked, violations, moves, failed_state):
             lines.append(f"  {i}. call `{m.tool}`({_args(m.args)}){ask}")
         lines.append(f"Then call `{blocked}` again only if every check above succeeds; "
                      f"if a check fails, tell the user the request cannot be completed.")
-        return "\n".join(lines)
+        return "\n".join(lines) + alt
     raise ValueError(mode)

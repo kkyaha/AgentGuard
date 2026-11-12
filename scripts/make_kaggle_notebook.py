@@ -43,8 +43,9 @@ code("""
 # ===== Cấu hình =====
 MODEL    = "qwen3.5-2b"              # hoặc "gemma-4-e2b-it" (lưu ý: Gemma có thể không ổn định với fp16)
 DOMAIN   = "bank"
-MODES    = "none,bare,alignment"     # thêm reason,next_action,template nếu còn thời gian
-TASK_SET = "smoke"                   # "smoke" (12 task) | "clean" (toàn bộ task sạch) | "8,67,81"
+MODES    = "bare,alignment"          # có Gate; đã có kết quả none từ lần chạy trước
+TASK_SET = "smoke"                   # 12 task | "8,67,92,121" | "clean"
+RUN_STEP1 = False                    # True: chạy thử 1 task trước (lần đầu dùng notebook)
 import os
 os.environ["VLLM_DTYPE"] = "float16"          # T4 không hỗ trợ bf16 (SOPBench gốc dùng bf16)
 os.environ["QWEN35_THINKING"] = "1"           # bản công bố chạy CÓ thinking
@@ -104,8 +105,11 @@ md("""
 Nếu lỗi ở đây: xem log `[frameguard] vllm cmd` và thông báo của vLLM (thiếu bộ nhớ → bật `VLLM_MAX_MODEL_LEN`).
 """)
 code("""
-!cd /kaggle/working/frameguard && python adapters/sopbench/runner.py --model $MODEL --domain $DOMAIN --modes none --task_set 8 > /kaggle/working/step1.log 2>&1; grep -E "frameguard|Traceback|Error|error|CUDA|memory|^none" /kaggle/working/step1.log | tail -40
-""".replace("$MODEL", "{MODEL}").replace("$DOMAIN", "{DOMAIN}"))
+if RUN_STEP1:
+    !cd /kaggle/working/frameguard && python adapters/sopbench/runner.py --model {MODEL} --domain {DOMAIN} --modes none --task_set 8 > /kaggle/working/step1.log 2>&1; grep -E "frameguard|Traceback|Error|error|CUDA|memory|^none" /kaggle/working/step1.log | tail -40
+else:
+    print("Bỏ qua bước 1 (RUN_STEP1 = False)")
+""")
 
 md("""
 **Kiểm tra trước khi sang Bước 2:** mỗi task phải mất khoảng ≥ 30 giây và GPU memory (cột phải) khoảng 13–14 GB.
@@ -113,7 +117,7 @@ Nếu task chỉ mất vài giây → đang lỗi: xem ô chẩn đoán ngay dư
 """)
 code("""
 # Chẩn đoán: 60 dòng cuối của log vLLM / runner (gửi đoạn này nếu có lỗi)
-!tail -60 /kaggle/working/step1.log
+!tail -60 /kaggle/working/step1.log 2>/dev/null || echo "(không có step1.log)"
 """)
 md("## Bước 2 — thử nhanh: 12 task × các chế độ")
 code("""
@@ -146,9 +150,48 @@ for m in by:
           f"trung bình {sum(r['seconds'] for r in by[m].values())/max(1,len(by[m])):.0f} giây/task")
 """)
 
-code("""
-!tail -40 /kaggle/working/step2.log
-!cd /kaggle/working && zip -qr frameguard_runs.zip frameguard/runs step1.log step2.log && ls -lh frameguard_runs.zip
+code(r"""
+# ===== Tóm tắt kết quả (chỉ đọc file kết quả của FrameGuard) =====
+import glob, json, os, zipfile, collections
+cands = (glob.glob("/kaggle/working/frameguard/runs/**/task_*.json", recursive=True) +
+         glob.glob("/kaggle/input/**/runs/**/task_*.json", recursive=True))
+runs, files = collections.defaultdict(dict), []
+for f in sorted(set(cands)):
+    try: d = json.load(open(f))
+    except Exception: continue
+    if not isinstance(d, dict) or "summary" not in d or "gate_log" not in d: continue
+    files.append(f); runs[d["summary"]["mode"]][d["summary"]["task"]] = d
+print("Tìm thấy", len(files), "file kết quả")
+zpath = "/kaggle/working/frameguard_runs.zip"
+with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
+    for f in files + glob.glob("/kaggle/working/step*.log"):
+        z.write(f, arcname=f.split("/runs/")[-1] if "/runs/" in f else os.path.basename(f))
+print("Đã tạo", zpath, round(os.path.getsize(zpath) / 1e6, 2), "MB\n")
+for mode in ["none", "bare", "alignment"] + [m for m in runs if m not in ("none", "bare", "alignment")]:
+    if mode not in runs: continue
+    print("=" * 30, mode, "=" * 30)
+    for t in sorted(runs[mode]):
+        d = runs[mode][t]; s = d["summary"]; ev = d["evaluation"]
+        why = [k for k in ("no_tool_call_error", "constraint_not_violated", "database_match",
+                           "dirgraph_satisfied", "action_called_correctly") if not ev.get(k, True)]
+        print(f"task {t:3d} {s['goal']:20s} nên_thành_công={s['should_succeed']!s:5s} pass={s['success_fixed']!s:5s} "
+              f"chặn={s['n_blocked']} tool_calls={s['n_tool_calls']} trượt_vì={why} lỗi={s.get('error')}")
+        seq = [f"X{e['tool']}[thiếu:{'|'.join(e['repair'])}]" if e["decision"] == "blocked"
+               else f"+{e['tool']}={str(e.get('result', ''))[:25]}" for e in d["gate_log"]]
+        print("     ", " -> ".join(seq) if seq else "(không gọi tool nào)")
+        inter = d["interaction"]
+        idx = next((i for i, m in enumerate(inter)
+                    if m.get("tool_name") and str(m.get("content", "")).startswith("Error: the call to")), None)
+        if idx is not None:
+            nxt = next((m for m in inter[idx + 1:] if str(m.get("sender", "")).endswith("assistant")), None)
+            if nxt:
+                think = str(nxt.get("reasoning") or nxt.get("reasoning_content") or "")[:300].replace("\n", " ")
+                calls = [tc["function"]["name"] for tc in (nxt.get("tool_calls") or [])]
+                print("      sau khi bị chặn -> nghĩ:", think or "(không có)")
+                print("                     -> gọi:", calls, "| nói:", str(nxt.get("content") or "")[:150].replace("\n", " "))
+        last = [m.get("content") for m in inter if str(m.get("sender", "")).endswith("assistant") and m.get("content")]
+        if last: print("      câu cuối:", str(last[-1])[:200].replace("\n", " "))
+    print()
 """)
 
 md("""

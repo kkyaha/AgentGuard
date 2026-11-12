@@ -22,8 +22,8 @@
     "Precedence:unconformant": 7,
     "ChoicePrecedence:missing": 3,
     "Existence:never_attempted": 1,
-    "DataCondition:checked_ignored": 1,
-    "ChoicePrecedence:partial": 1
+    "ChoicePrecedence:partial": 1,
+    "DataCondition:checked_ignored": 1
    }
   },
   "llama3.1-8b-instruct-mode_react": {
@@ -170,8 +170,8 @@
     "Existence:never_attempted": 10,
     "DataCondition:checked_ignored": 1,
     "Precedence:missing": 7,
-    "BranchedPrecedence:missing": 14,
     "DataCondition:unchecked": 9,
+    "BranchedPrecedence:missing": 14,
     "ChoicePrecedence:missing": 1
    }
   },
@@ -189,8 +189,8 @@
    "any": {
     "Precedence:missing": 2,
     "Existence:attempted_failed": 3,
-    "BranchedPrecedence:missing": 7,
     "DataCondition:unchecked": 3,
+    "BranchedPrecedence:missing": 7,
     "DataCondition:checked_ignored": 3,
     "Existence:never_attempted": 1,
     "BranchedPrecedence:partial": 1
