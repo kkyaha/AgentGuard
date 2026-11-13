@@ -146,6 +146,64 @@ Goal should_succeed không model nào pass: dmv/update_test_status, hotel/{find_
   (internal_get_database) — đã thêm vào phản hồi (template/alignment), chưa thử.
 - Tín hiệu đủ để làm pilot, chưa đủ để báo cáo (12 task làm giàu, 1 lần chạy).
 
+## Đối chứng pilot: model phát lại qua Gate (bank, 105 task sạch, không cần GPU)
+Model không thích nghi (trajectory công bố của qwen3.5-2b phát lại), chỉ có tác dụng của việc chặn:
+| | none | bare | alignment |
+|---|---|---|---|
+| Pass | 46/105 (44%) | 84/105 (80%) | 84/105 (80%) |
+| Hoàn thành (33 task nên thành công) | 12/33 (36%) | 15/33 (45%) | 15/33 (45%) |
+| Từ chối đúng (72 task nên từ chối) | 34/72 (47%) | 69/72 (96%) | 69/72 (96%) |
+→ Ngưỡng cho pilot thật: phản hồi có tác dụng khi **hoàn thành > 45%** và alignment > bare.
+Runner song song (6–8 luồng) cho kết quả giống hệt chạy tuần tự trên cả 315 lượt (kể cả gate_log).
+
+## Pilot thật (2026-11-13) — Qwen3.5-2B, thinking bật, vLLM 0.25 fp16, 2×T4, bank, 105 task sạch
+code_version `ad4aff198756` cho mọi lượt. none/bare r0: `pilot.log` (chỉ có dòng log mỗi task, file JSON chi tiết đã mất);
+alignment r0 + lặp r1/r2: `frameguard_pilot.zip` (JSON đầy đủ).
+| | none | bare | alignment |
+|---|---|---|---|
+| Pass | 53/105 (50%) | 97/105 (92%) | 98/105 (93%) |
+| Hoàn thành (33 nên thành công) | 15/33 (45%) | 27/33 (82%) | 29/33 (88%) |
+| Từ chối đúng (72) | 38/72 (53%) | 70/72 (97%) | 69/72 (96%) |
+| Phục hồi (pass / bị chặn ≥1) | – | 46/53 (87%) | 54/59 (92%) |
+| Lặp lại lời gọi bị chặn | – | 40 | 12 |
+McNemar chính xác (b = A pass & B trượt, c = ngược lại):
+- bare vs none: mọi task 45/1 p=1e-12; nên thành công 12/0 p=0.0005.
+- alignment vs none: mọi task 48/3 p=2e-11; nên thành công 15/1 p=0.0005.
+- **alignment vs bare: mọi task 6/5 p=1.0; nên thành công 4/2 p=0.69; task bare bị chặn 6/2 p=0.29 → chưa phân biệt được.**
+Hoàn thành vượt mốc model phát lại (45%) rất xa → tác dụng không chỉ đến từ việc chặn, model thật sự sửa theo phản hồi.
+Hành vi sau lần chặn đầu (alignment): làm theo chuỗi sửa 68%, dừng/hỏi khách 19%, đổi hướng 10%, lặp đúng lời gọi 3%.
+Alignment trượt 7: action_called_correctly 6, constraint_not_violated 3, database_match 2.
+Nhiễu (30 task chạy lặp): alignment 29/29/26, none 16/16/15; 10% task alignment đổi kết quả giữa các lần
+→ chênh lệch 1–2 task giữa alignment và bare nằm trong nhiễu.
+Kết luận: Gate + phản hồi bất kỳ tăng mạnh (50% → 92–93%); ở bank với model 2B thinking, phản hồi trần đã gần trần,
+alignment chỉ hơn về quá trình (ít lặp chặn hơn 3 lần). Để tách alignment khỏi bare cần điều kiện khó hơn:
+tắt thinking (E2), domain nhiều nhánh/tham số hơn (hotel, E3), model khác (Gemma-4-E2B, E4).
+
+## E2 (2026-11-13) — như pilot nhưng thinking TẮT, 5 chế độ — `runs/e2_nothink/`
+| | none | bare | next_action | template | alignment |
+|---|---|---|---|---|---|
+| Pass | 23/105 (22%) | 77 (73%) | 83 (79%) | **86 (82%)** | 83 (79%) |
+| Hoàn thành (33) | 4 (12%) | 12 (36%) | 19 (58%) | 19 (58%) | 18 (55%) |
+| Từ chối đúng (72) | 19 (26%) | 65 (90%) | 64 (89%) | 67 (93%) | 65 (90%) |
+| Phục hồi | – | 54/73 (74%) | 61/73 (84%) | 63/72 (88%) | 61/73 (84%) |
+| Lặp lời gọi bị chặn | – | 36 | 10 | 10 | 9 |
+| Làm theo chuỗi sửa sau lần chặn đầu | – | 63% | 93% | 86% | 89% |
+McNemar (mọi task / nên thành công): template vs bare 12/3 p=0.035 / 8/1 p=0.039 (chưa hiệu chỉnh nhiều phép so;
+Holm trên 8 cặp → không còn ý nghĩa); alignment vs bare 12/6 p=0.24 / 9/3 p=0.15; next_action vs bare 12/6 p=0.24 / 9/2 p=0.07;
+alignment vs next_action 3/3 p=1.0; alignment vs template 2/5 p=0.45. Nhiễu: alignment 26/26 (r1/r2), 1/30 task đổi kết quả.
+Kết luận:
+- Tắt thinking làm model yếu đi nhiều (none 50% → 22%), bare không còn gần trần (92% → 73%);
+  **phản hồi có thông tin (next_action/template/alignment) hơn bare ~6–9 điểm pass, ~20 điểm hoàn thành**, lặp chặn giảm 3–4 lần.
+- **Ba kiểu phản hồi có thông tin ngang nhau.** Ở bank, 70% chuỗi sửa chỉ 1 bước (chủ yếu login_user) → alignment ≈ next_action
+  về nội dung; chưa có điều kiện để alignment thể hiện khác biệt.
+- Lỗi hoàn thành còn lại (alignment 15 task, các chế độ Gate tương tự) chia hai nhóm, **không phải lỗi phục hồi theo nghĩa hẹp**:
+  (a) 8 task bị chặn ở **tool phụ không cần cho goal** (vd deposit_funds chỉ cần internal_check_username_exist, model gọi thêm
+  get_account_balance → bị chặn → phản hồi bảo login_user → khách không có mật khẩu → hỏi đi hỏi lại tới hết lượt) — phản hồi
+  hiện tại đẩy model vào đường cụt; (b) 6 task không bị chặn lần nào, model tự đòi xác thực thừa rồi không gọi goal
+  (Existence không thỏa, Gate hiện không xử lý). Task alignment (a): 6, 28, 69, 70, 78, 98, 117, 122; (b): 30, 33, 35, 67, 111, 115.
+- Hướng sửa (chưa làm): phản hồi **biết goal** — khi tool bị chặn là tool phụ và tiền điều kiện của goal đã thỏa, nói
+  "X không cần cho yêu cầu này; điều kiện của goal đã đủ, có thể gọi goal"; với (b) cần kiểm tra Existence lúc kết thúc.
+
 ## Chưa làm
 - Đọc tay ~30 trajectory lỗi (kiểm chứng nhãn tự động).
 - Tìm nguyên nhân các task không giải được ở hotel/library.

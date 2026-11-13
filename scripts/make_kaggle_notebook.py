@@ -2,13 +2,14 @@
 
 Chạy lại script này mỗi khi sửa mã:  python3 scripts/make_kaggle_notebook.py
 """
-import json, os
+import json, os, sys
+VARIANT = sys.argv[1] if len(sys.argv) > 1 else "smoke"
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 SOPBENCH_COMMIT = "8790ed7406acbd22270f90bd1c4038de3fc5db8f"
 FILES = ["analysis/declare_rules.py", "analysis/conformance.py", "analysis/failure_taxonomy.py",
          "analysis/alignment.py", "analysis/oracle_fix.py", "frameguard/__init__.py", "frameguard/feedback.py",
-         "frameguard/gate.py", "adapters/sopbench/runner.py", "adapters/sopbench/task_sets.json"]
+         "frameguard/gate.py", "adapters/sopbench/runner.py", "adapters/sopbench/task_sets.json", "analysis/pilot_report.py"]
 
 cells = []
 

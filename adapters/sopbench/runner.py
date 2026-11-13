@@ -4,11 +4,16 @@ Giữ nguyên cấu hình công bố của SOPBench (fc, tool_list full, env_mod
 không user simulator, temperature 0, top_p 0.01, max_tokens 1024, max_turns 20, max_actions 10).
 Không sửa mã SOPBench: Gate gắn bằng cách bọc Swarm.handle_tool_calls; kiểu dữ liệu vLLM đổi bằng cách bọc lệnh khởi động.
 
+Chạy song song: mỗi task một luồng, có Gate / agent / bộ đếm token riêng (thread-local); vLLM gộp request.
+Lời gọi bị Gate chặn VẪN tính vào max_actions của SOPBench (giữ ngân sách như baseline; ghi trong config).
+
 Ví dụ:
-  python adapters/sopbench/runner.py --model qwen3.5-2b --domain bank --modes none,bare,alignment --task_set smoke
-  python adapters/sopbench/runner.py --fake_replay qwen3.5-2b-mode_fc --domain bank --modes none,alignment --task_set smoke
+  python adapters/sopbench/runner.py --model qwen3.5-2b --domain bank --modes none,bare,alignment --task_set clean --workers 6
+  python adapters/sopbench/runner.py --model qwen3.5-2b --modes none,alignment --task_set pilot_repeat --runs 1,2 --workers 6
+  python adapters/sopbench/runner.py --fake_replay qwen3.5-2b-mode_fc --modes none,bare,alignment --task_set clean --workers 8
 """
-import argparse, copy, json, os, sys, time, traceback
+import argparse, collections, copy, hashlib, json, os, sys, threading, time, traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SOPBENCH = os.environ.setdefault("SOPBENCH", os.path.join(ROOT, "external", "SOPBench"))
@@ -18,7 +23,7 @@ os.chdir(SOPBENCH)  # SOPBench dùng đường dẫn tương đối
 import swarm.llm_handler as lh  # noqa: E402
 import swarm.core as core  # noqa: E402
 from swarm.types import Agent, Response  # noqa: E402
-from swarm.util import function_to_json, construct_chatcompletion  # noqa: E402
+from swarm.util import construct_chatcompletion  # noqa: E402
 import run_simulation as rsim  # noqa: E402
 from env.task import task_default_dep_full  # noqa: E402
 from env.evaluator import evaluator_function_directed_graph  # noqa: E402
@@ -29,6 +34,15 @@ from declare_rules import load_rules  # noqa: E402
 import conformance as C  # noqa: E402
 from oracle_fix import goal_succeeded_fixed  # noqa: E402
 from frameguard.gate import Gate  # noqa: E402
+
+TLS = threading.local()          # Gate + bộ đếm token của task đang chạy trong luồng này
+PRINT_LOCK = threading.Lock()
+
+
+def log(*a):
+    with PRINT_LOCK:
+        print(*a, flush=True)
+
 
 # ------------------------------------------------------------------ vLLM: đổi dtype / max-model-len khi cần (T4 không có bf16)
 _Popen = lh.subprocess.Popen
@@ -41,19 +55,20 @@ def _popen(cmd, *a, **k):
             cmd[cmd.index("--dtype") + 1] = os.environ["VLLM_DTYPE"]
         if os.getenv("VLLM_MAX_MODEL_LEN") and "--max-model-len" in cmd:
             cmd[cmd.index("--max-model-len") + 1] = os.environ["VLLM_MAX_MODEL_LEN"]
-        print("[frameguard] vllm cmd:", " ".join(cmd), flush=True)
+        if os.getenv("VLLM_MAX_NUM_SEQS"):
+            cmd += ["--max-num-seqs", os.environ["VLLM_MAX_NUM_SEQS"]]
+        log("[frameguard] vllm cmd:", " ".join(cmd))
     return _Popen(cmd, *a, **k)
 
 
 lh.subprocess.Popen = _popen
 
-# ------------------------------------------------------------------ Gate gắn vào Swarm.handle_tool_calls
-CURRENT_GATE = None
+# ------------------------------------------------------------------ Gate gắn vào Swarm.handle_tool_calls (theo luồng)
 _orig_handle = core.Swarm.handle_tool_calls
 
 
 def _gated_handle(self, tool_calls, functions, context_variables, debug):
-    G = CURRENT_GATE
+    G = getattr(TLS, "gate", None)
     msgs = []
     for tc in tool_calls:
         name = tc.function.name
@@ -76,16 +91,31 @@ def _gated_handle(self, tool_calls, functions, context_variables, debug):
 core.Swarm.handle_tool_calls = _gated_handle
 
 
-# ------------------------------------------------------------------ model giả: phát lại trajectory công bố (kiểm tra ống dẫn, không cần GPU)
-class ReplayHandler(lh.OpenAIHandler):  # kế thừa để qua kiểm tra kiểu của Agent; không gọi __init__ gốc
-    def __init__(self, domain, model_key):
-        p = os.path.join(SOPBENCH, "output", domain, f"ast_{model_key}-dep_full-fmt_structured-tool_full-shuffle_False.json")
-        self.data = json.load(open(p))
-        self.model_name = self.model_name_huggingface = f"replay:{model_key}"
-        self.script = []
+def count_tokens(handler):
+    """Bọc handler.inference để cộng token theo luồng (usage từ vLLM)."""
+    orig = handler.inference
 
-    def start(self, idx):
-        self.script = [m for m in self.data[idx]["interactions"][0]["interaction"]
+    def wrapped(*a, **k):
+        out = orig(*a, **k)
+        u = getattr(out.get("completion"), "usage", None)
+        if u is not None and hasattr(TLS, "tokens"):
+            TLS.tokens["prompt"] += getattr(u, "prompt_tokens", 0) or 0
+            TLS.tokens["completion"] += getattr(u, "completion_tokens", 0) or 0
+            TLS.tokens["llm_calls"] += 1
+        return out
+    handler.inference = wrapped
+
+
+# ------------------------------------------------------------------ model giả: phát lại trajectory công bố (không cần GPU)
+class ReplayHandler(lh.OpenAIHandler):  # kế thừa để qua kiểm tra kiểu của Agent; không gọi __init__ gốc
+    _cache = {}
+
+    def __init__(self, domain, model_key, idx):
+        p = os.path.join(SOPBENCH, "output", domain, f"ast_{model_key}-dep_full-fmt_structured-tool_full-shuffle_False.json")
+        if p not in self._cache:
+            self._cache[p] = json.load(open(p))
+        self.model_name = self.model_name_huggingface = f"replay:{model_key}"
+        self.script = [m for m in self._cache[p][idx]["interactions"][0]["interaction"]
                        if m.get("sender", "").endswith("assistant")]
 
     def inference(self, create_params, debug, mode="chat", tool_call_mode="fc"):
@@ -106,8 +136,6 @@ class ReplayHandler(lh.OpenAIHandler):  # kế thừa để qua kiểm tra kiể
 
 
 # ------------------------------------------------------------------ phiên bản code: chỉ dùng lại kết quả cũ khi cùng code + cấu hình
-import hashlib  # noqa: E402
-
 CODE_FILES = ["frameguard/gate.py", "frameguard/feedback.py", "adapters/sopbench/runner.py", "analysis/alignment.py",
               "analysis/conformance.py", "analysis/declare_rules.py", "analysis/oracle_fix.py"]
 
@@ -119,7 +147,15 @@ def code_version():
     return h.hexdigest()[:12]
 
 
-# ------------------------------------------------------------------ chạy
+def vllm_version():
+    try:
+        import importlib.metadata as md
+        return md.version("vllm")
+    except Exception:
+        return None
+
+
+# ------------------------------------------------------------------ dữ liệu
 def sop_args(a):
     argv = ["--domain", a.domain, "--assistant_model", a.model or "replay", "--tool_call_mode", "fc",
             "--tool_list", "full", "--env_mode", "prompt", "--default_constraint_option", "full",
@@ -150,6 +186,8 @@ def select(a):
         return s["gate_addressable_failures"] + s["published_passes"]
     if a.task_set == "clean":
         return sets[a.domain]["clean"]
+    if a.task_set == "pilot_repeat":
+        return sets[f"pilot_repeat_{a.domain}"]
     return [int(x) for x in a.task_set.split(",")]
 
 
@@ -176,112 +214,138 @@ def evaluate(domain, task, interaction, database):
     return ev
 
 
+# ------------------------------------------------------------------ một task
+def run_one(ctx, mode, i, run_k):
+    a, tasks = ctx["a"], ctx["tasks"]
+    f = os.path.join(a.out, a.domain, ctx["run_name"], mode, f"task_{i:04d}_r{run_k}.json")
+    if os.path.exists(f):           # chạy tiếp khi phiên bị ngắt — chỉ khi cùng code + cấu hình
+        try:
+            old = json.load(open(f))
+            oc = old.get("config", {})
+            if all(oc.get(k) == ctx["config"][k] for k in ("code_version", "max_tokens", "max_actions", "vllm_dtype")):
+                return old["summary"]
+        except Exception:
+            pass
+        log(f"[frameguard] task {i} ({mode}, r{run_k}): file cũ khác phiên bản code/cấu hình -> chạy lại")
+    task = copy.deepcopy(tasks[i])
+    handler = ReplayHandler(a.domain, a.fake_replay, i) if a.fake_replay else ctx["handler"]
+    assistant = Agent(name="domain assistant", client=handler, temperature=0.0, top_p=0.01,
+                      max_tokens=a.max_tokens, tool_call_mode="fc", instructions="", functions=[])
+    user = Agent(name="user", client=None, default_response="", response_repeat=True)
+    TLS.gate = Gate(load_rules(a.domain, task), mode)
+    TLS.tokens = collections.Counter()
+    t0 = time.time()
+    err = None
+    try:
+        res = rsim.run_task_simulation(args=ctx["args"], task=task, dep_innate_full=copy.deepcopy(ctx["dep_innate_full"]),
+                                       default_dep_full=copy.deepcopy(ctx["default_dep_full"]),
+                                       default_dep_full_descr=copy.deepcopy(ctx["default_dep_full_descr"]),
+                                       assistant_agent=assistant, user_agent=user)
+    except Exception as e:
+        log(traceback.format_exc())
+        err = repr(e)
+        res = {"interaction": [], "database": task["initial_database"]}
+    inter = res["interaction"]
+    for m in inter:
+        m.pop("role", None)
+    ev = evaluate(a.domain, task, inter, res["database"])
+    G = TLS.gate
+    gs = G.summary()
+    s = {"task": i, "run": run_k, "goal": task["user_goal"], "should_succeed": task["action_should_succeed"], "mode": mode,
+         "success": ev["success"], "success_fixed": ev["success_fixed"], "success_with_blocked": ev["success_with_blocked"],
+         "n_blocked": gs["n_blocked"], "n_repeat_blocked": gs["n_repeat_blocked"], "n_would_block": gs["n_would_block"],
+         "n_tool_calls": ev["num_function_calls"], "tokens": dict(TLS.tokens), "error": err,
+         "seconds": round(time.time() - t0, 1)}
+    os.makedirs(os.path.dirname(f), exist_ok=True)
+    json.dump({"config": ctx["config"], "task": task, "interaction": inter, "database": res["database"],
+               "evaluation": ev, "gate_log": G.log, "summary": s},
+              open(f, "w"), indent=1, ensure_ascii=False, default=str)
+    log(f"[frameguard] {mode:11s} r{run_k} task {i:3d} {task['user_goal']:26s} pass={ev['success_fixed']!s:5s} "
+        f"chặn={gs['n_blocked']} tok={TLS.tokens['prompt'] + TLS.tokens['completion']} {s['seconds']}s"
+        + (f" LỖI {err}" if err else ""))
+    return s
+
+
+# ------------------------------------------------------------------ main
 def main():
-    global CURRENT_GATE
     p = argparse.ArgumentParser()
     p.add_argument("--domain", default="bank")
     p.add_argument("--model", default=None, help="tên model SOPBench, vd qwen3.5-2b, gemma-4-e2b-it")
     p.add_argument("--fake_replay", default=None, help="vd qwen3.5-2b-mode_fc: phát lại trajectory công bố thay cho model")
     p.add_argument("--modes", default="none,bare,alignment")
-    p.add_argument("--task_set", default="smoke", help="smoke | clean | danh sách id cách nhau dấu phẩy")
+    p.add_argument("--task_set", default="smoke", help="smoke | clean | pilot_repeat | danh sách id cách nhau dấu phẩy")
+    p.add_argument("--runs", default="0", help="chỉ số lần chạy, vd '0' hoặc '1,2' (chạy lặp)")
+    p.add_argument("--workers", type=int, default=1, help="số task chạy song song")
+    p.add_argument("--repeat_set", default=None, help="tập task chạy lặp thêm, vd pilot_repeat")
+    p.add_argument("--repeat_modes", default="none,alignment")
+    p.add_argument("--repeat_runs", default="1,2")
     p.add_argument("--max_tokens", type=int, default=1024)
     p.add_argument("--max_actions", type=int, default=10)
     p.add_argument("--num_gpus", type=int, default=1)
     p.add_argument("--out", default=os.path.join(ROOT, "runs"))
     a = p.parse_args()
 
-    global CODE_VERSION
-    CODE_VERSION = code_version()
-    print(f"[frameguard] code_version={CODE_VERSION}", flush=True)
-    args = sop_args(a)
-    tasks = load_tasks(a.domain)
-    ids = select(a)
     dep_innate_full, default_dep_full, default_dep_full_descr = task_default_dep_full(
         a.domain, "full", "structured", dependency_verb_dep_orig=True)
+    run_name = f"replay_{a.fake_replay}" if a.fake_replay else a.model
+    ctx = {"a": a, "args": sop_args(a), "tasks": load_tasks(a.domain), "run_name": run_name,
+           "dep_innate_full": dep_innate_full, "default_dep_full": default_dep_full,
+           "default_dep_full_descr": default_dep_full_descr,
+           "config": {"model": run_name, "domain": a.domain, "code_version": code_version(), "vllm_version": vllm_version(),
+                      "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
+                      "thinking": {"qwen": os.getenv("QWEN35_THINKING"), "gemma": os.getenv("GEMMA4_THINKING")},
+                      "max_tokens": a.max_tokens, "max_actions": a.max_actions, "workers": a.workers,
+                      "blocked_calls_count_toward_max_actions": True}}
+    log(f"[frameguard] code_version={ctx['config']['code_version']} vllm={ctx['config']['vllm_version']} workers={a.workers}")
+    ids = select(a)
+    jobs = [(m, i, int(k)) for k in a.runs.split(",") for m in a.modes.split(",") for i in ids]
+    log(f"[frameguard] {len(jobs)} lượt chạy chính: {len(ids)} task × {a.modes} × runs {a.runs}")
+    if a.repeat_set:
+        rids = select(argparse.Namespace(task_set=a.repeat_set, domain=a.domain))
+        extra = [(m, i, int(k)) for k in a.repeat_runs.split(",") for m in a.repeat_modes.split(",") for i in rids]
+        jobs += extra
+        log(f"[frameguard] + {len(extra)} lượt chạy lặp: {len(rids)} task × {a.repeat_modes} × runs {a.repeat_runs}")
 
-    if a.fake_replay:
-        handler = ReplayHandler(a.domain, a.fake_replay)
-        run_name = f"replay_{a.fake_replay}"
-    else:
+    handler = None
+    if not a.fake_replay:
         handler = lh.OpenAIHandler(model_name=a.model, num_gpus=a.num_gpus, gpu_memory_utilization=0.92, tool_calling=True)
-        run_name = a.model
-    assistant = Agent(name="domain assistant", client=handler, temperature=0.0, top_p=0.01,
-                      max_tokens=a.max_tokens, tool_call_mode="fc", instructions="", functions=[])
-    user = Agent(name="user", client=None, default_response="", response_repeat=True)
+        count_tokens(handler)
+    ctx["handler"] = handler
 
-    summary = []
-    n_err = 0
+    summary, n_err, t0 = [], 0, time.time()
     try:
-        for mode in a.modes.split(","):
-            out_dir = os.path.join(a.out, a.domain, run_name, mode)
-            os.makedirs(out_dir, exist_ok=True)
-            for i in ids:
-                f = os.path.join(out_dir, f"task_{i:04d}.json")
-                if os.path.exists(f):           # chạy tiếp khi phiên bị ngắt — chỉ khi cùng code + cấu hình
-                    old = json.load(open(f))
-                    oc = old.get("config", {})
-                    if (oc.get("code_version") == CODE_VERSION and oc.get("max_tokens") == a.max_tokens
-                            and oc.get("max_actions") == a.max_actions and oc.get("vllm_dtype") == os.getenv("VLLM_DTYPE", "bfloat16")):
-                        summary.append(old["summary"])
-                        continue
-                    print(f"[frameguard] task {i} ({mode}): file cũ khác phiên bản code/cấu hình -> chạy lại", flush=True)
-                task = copy.deepcopy(tasks[i])
-                CURRENT_GATE = Gate(load_rules(a.domain, task), mode)
-                if a.fake_replay:
-                    handler.start(i)
-                t0 = time.time()
-                try:
-                    res = rsim.run_task_simulation(args=args, task=task, dep_innate_full=dep_innate_full,
-                                                   default_dep_full=default_dep_full,
-                                                   default_dep_full_descr=default_dep_full_descr,
-                                                   assistant_agent=assistant, user_agent=user)
-                except Exception as e:
-                    traceback.print_exc()
-                    res = {"interaction": [], "database": task["initial_database"], "error": repr(e)}
-                    n_err += 1
-                    print(f"[frameguard] LỖI task {i}: {e!r}", flush=True)
-                    if n_err >= 3:
-                        raise SystemExit("[frameguard] DỪNG: 3 task liên tiếp lỗi — xem traceback ở trên.")
-                else:
-                    n_err = 0
-                inter = res["interaction"]
-                for m in inter:
-                    m.pop("role", None)
-                ev = evaluate(a.domain, task, inter, res["database"])
-                gs = CURRENT_GATE.summary()
-                s = {"task": i, "goal": task["user_goal"], "should_succeed": task["action_should_succeed"], "mode": mode,
-                     "success": ev["success"], "success_fixed": ev["success_fixed"], "success_with_blocked": ev["success_with_blocked"], "n_blocked": gs["n_blocked"],
-                     "n_repeat_blocked": gs["n_repeat_blocked"], "n_tool_calls": ev["num_function_calls"], "error": res.get("error"),
-                     "seconds": round(time.time() - t0, 1)}
-                json.dump({"config": {"model": run_name, "domain": a.domain, "mode": mode, "code_version": CODE_VERSION, "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
-                                      "thinking": {"qwen": os.getenv("QWEN35_THINKING"), "gemma": os.getenv("GEMMA4_THINKING")},
-                                      "max_tokens": a.max_tokens, "max_actions": a.max_actions},
-                           "task": task, "interaction": inter, "database": res["database"], "evaluation": ev,
-                           "gate_log": CURRENT_GATE.log, "summary": s},
-                          open(f, "w"), indent=1, ensure_ascii=False, default=str)
+        with ThreadPoolExecutor(max_workers=max(1, a.workers)) as ex:
+            futs = {ex.submit(run_one, ctx, m, i, k): (m, i, k) for (m, i, k) in jobs}
+            for n, fut in enumerate(as_completed(futs), 1):
+                s = fut.result()
                 summary.append(s)
-                print(f"[frameguard] {mode:11s} task {i:3d} {task['user_goal']:28s} success={ev['success']!s:5s} "
-                      f"fixed={ev['success_fixed']!s:5s} blocked={gs['n_blocked']} {s['seconds']}s", flush=True)
+                n_err = n_err + 1 if s.get("error") else 0
+                if n_err >= 5:
+                    log("[frameguard] DỪNG: 5 task liên tiếp lỗi — xem traceback ở trên.")
+                    os._exit(1)
+                if n % 10 == 0:
+                    el = time.time() - t0
+                    log(f"[frameguard] tiến độ {n}/{len(jobs)} — {el / 60:.0f} phút, còn ~{el / n * (len(jobs) - n) / 60:.0f} phút")
     finally:
-        if hasattr(handler, "kill_process"):
+        if handler is not None:
             handler.kill_process()
     report(summary)
 
 
 def report(summary):
-    import collections
     by = collections.defaultdict(list)
     for s in summary:
-        by[s["mode"]].append(s)
-    print("\nmode         n   pass  pass(sửa)  bị chặn≥1  phục hồi*  lặp-chặn  giây/task")
-    for mode, rows in by.items():
+        by[(s["mode"], s.get("run", 0))].append(s)
+    print("\nmode        run   n  pass  hoàn_thành  từ_chối_đúng  bị_chặn≥1  phục_hồi  lặp_chặn  giây/task")
+    for (mode, rk), rows in sorted(by.items()):
         n = len(rows)
-        blocked = [r for r in rows if r["n_blocked"] > 0]
-        rec = sum(r["success_fixed"] for r in blocked)
-        print(f"{mode:11s} {n:3d} {sum(r['success'] for r in rows):5d} {sum(r['success_fixed'] for r in rows):9d} "
-              f"{len(blocked):10d} {f'{rec}/{len(blocked)}':>10s} {sum(r['n_repeat_blocked'] for r in rows):9d} "
-              f"{sum(r['seconds'] for r in rows) / max(1, n):10.1f}")
-    print("* phục hồi = số task pass (oracle đã sửa) trong các task bị chặn ít nhất một lần")
+        ss = [r for r in rows if r["should_succeed"]]
+        sf = [r for r in rows if not r["should_succeed"]]
+        bl = [r for r in rows if r["n_blocked"] > 0]
+        print(f"{mode:11s} r{rk:<3d}{n:4d} {sum(r['success_fixed'] for r in rows):5d} "
+              f"{sum(r['success_fixed'] for r in ss):6d}/{len(ss):<4d} {sum(r['success_fixed'] for r in sf):7d}/{len(sf):<5d} "
+              f"{len(bl):9d} {sum(r['success_fixed'] for r in bl):5d}/{len(bl):<4d} {sum(r['n_repeat_blocked'] for r in rows):7d} "
+              f"{sum(r['seconds'] for r in rows) / max(1, n):9.1f}")
 
 
 if __name__ == "__main__":

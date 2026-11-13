@@ -12,6 +12,42 @@ from declare_rules import Act, Op  # noqa: E402
 from frameguard.feedback import render  # noqa: E402
 
 
+def _contains(f, name):
+    """X xuất hiện ở bất kỳ đâu trong công thức (kể cả tiền điều kiện lồng nhau của một Act)."""
+    if f is None:
+        return False
+    if isinstance(f, Act):
+        return f.name == name or _contains(f.sub, name)
+    return any(_contains(p, name) for p in f.parts)
+
+
+def _repair_avoid(f, binding, hist, avoid):
+    """Như alignment.repair nhưng ở nhánh `or` bỏ các nhánh cần tool trong `avoid` (nếu còn nhánh khác)."""
+    if f is None:
+        return []
+    if isinstance(f, Op) and f.kind == "or":
+        opts = [_repair_avoid(p, binding, hist, avoid) for p in f.parts]
+        ok = [o for o in opts if not any(m.tool in avoid for m in o)]
+        return min(ok or opts, key=_cost)
+    if isinstance(f, Op):
+        out, seen = [], set()
+        for p in f.parts:
+            for m in _repair_avoid(p, binding, hist, avoid):
+                if m.key() not in seen:
+                    seen.add(m.key())
+                    out.append(m)
+        return out
+    if hist.match(f, binding, hist.conformant):
+        return []
+    return _repair_avoid(f.sub, binding, hist, avoid) + repair(Act(f.name, f.params, None), binding, hist)
+
+
+def _ginfo_log(g):
+    if not g:
+        return None
+    return {k: ([m.tool for m in v] if k == "goal_steps" else v) for k, v in g.items()}
+
+
 class Gate:
     def __init__(self, rules, mode):
         self.rs, self.mode = rules, mode
@@ -21,10 +57,14 @@ class Gate:
 
     def check(self, name, args):
         """Trả về tin nhắn phản hồi nếu chặn, None nếu cho chạy."""
-        if self.mode == "none" or name not in self.rs.action_params or not isinstance(args, dict):
+        if name not in self.rs.action_params or not isinstance(args, dict):
             return None
         moves = align_activation(self.rs, name, args, self.hist)
         if not moves:
+            return None
+        if self.mode == "none":
+            # chế độ bóng: ghi lại "lẽ ra chặn ở đâu" để so với các chế độ có Gate, nhưng không chặn
+            self.log.append({"tool": name, "args": args, "decision": "would_block", "repair": [m.tool for m in moves]})
             return None
         f = self.rs.precondition(name)
         binding = {v: args.get(k) for k, v in f.params.items()} if isinstance(f, Act) else {}
@@ -34,12 +74,54 @@ class Gate:
         alt = self.alternative(name, args)
         key = (name, C.norm(args))
         self.blocked_counts[key] += 1
-        msg = render(self.mode, name, viol, moves, failed, alt)
+        ginfo = None
+        if self.mode == "goal":
+            ginfo = self.goal_info(name, args, failed)
+        elif self.mode == "purpose":
+            ginfo = {"required_by": self.required_by(name)}
+        msg = render(self.mode, name, viol, moves, failed, alt, ginfo)
         self.log.append({"tool": name, "args": args, "decision": "blocked",
                          "violations": [list(v[:1]) + [list(v[1])] + [v[2]] for v in viol],
                          "repair": [m.tool for m in moves], "alternative": [m.tool for m in alt],
-                         "failed_state": failed, "repeat_index": self.blocked_counts[key], "message": msg})
+                         "failed_state": failed, "repeat_index": self.blocked_counts[key], "message": msg,
+                         "goal_info": _ginfo_log(ginfo)})
         return msg
+
+    # ------------------------------------------------------------ phản hồi theo goal
+    def _seen_values(self, args):
+        """Giá trị tham số đã xuất hiện trong các lời gọi (để điền tham số cho các bước của goal)."""
+        seen = {}
+        for e in self.log:
+            if isinstance(e.get("args"), dict):
+                seen.update({k: v for k, v in e["args"].items() if v is not None})
+        seen.update({k: v for k, v in args.items() if v is not None})
+        return seen
+
+    def goal_info(self, name, args, failed):
+        """Chế độ `goal` (Gate biết loại yêu cầu G). So lời gọi bị chặn X với mô hình ràng buộc của G:
+        - needed   : X có trên một đường tới G (có thể trong nhánh `or`)
+        - not_needed: X không nằm trong tiền điều kiện của G → chỉ ra các bước còn thiếu của G (rỗng = gọi G được)
+        Chuỗi bước của G tránh tool tạo trạng thái đã thất bại (vd login_user trả False) nếu có nhánh khác."""
+        G = self.rs.goal
+        if name == G:
+            return {"goal": G, "relation": "is_goal"}
+        g = self.rs.precondition(G)
+        sub = g.sub if isinstance(g, Act) else None
+        binding = self._seen_values(args)
+        steps = _repair_avoid(sub, binding, self.hist, set(failed)) if sub is not None else []
+        rel = "needed" if _contains(sub, name) else "not_needed"
+        return {"goal": G, "relation": rel, "goal_steps": steps}
+
+    def required_by(self, name):
+        """Chế độ `purpose` (không biết goal): các action của domain có X trong tiền điều kiện (Precedence ngược)."""
+        out = []
+        for a in sorted(self.rs.action_params):
+            if a == name:
+                continue
+            f = self.rs.precondition(a)
+            if isinstance(f, Act) and _contains(f.sub, name):
+                out.append(a)
+        return out
 
     def alternative(self, name, args):
         """Đường thay thế cho tool phụ bị chặn, lấy từ nhánh `or` (Branched/Choice Precedence) của goal.
@@ -83,4 +165,5 @@ class Gate:
     def summary(self):
         b = [e for e in self.log if e["decision"] == "blocked"]
         return {"n_blocked": len(b), "n_repeat_blocked": sum(e["repeat_index"] > 1 for e in b),
+                "n_would_block": sum(e["decision"] == "would_block" for e in self.log),
                 "templates": collections.Counter(v[0] for e in b for v in e["violations"])}

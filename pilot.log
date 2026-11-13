@@ -1,0 +1,3339 @@
+[frameguard] code_version=ad4aff198756 vllm=0.25.0 workers=6
+[frameguard] 315 lượt chạy chính: 105 task × none,bare,alignment × runs 0
+[frameguard] + 120 lượt chạy lặp: 30 task × none,alignment × runs 1,2
+Using vllm backend.
+[frameguard] vllm cmd: vllm serve Qwen/Qwen3.5-2B --port 3185 --dtype float16 --tensor-parallel-size 1 --gpu-memory-utilization 0.92 --trust-remote-code --max-model-len 32000 --enable-auto-tool-choice --tool-call-parser qwen3_xml --reasoning-parser qwen3
+Server probe not ready on port 3185. Trying 1 times...
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:339] 
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.25.0
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:339]   █▄█▀ █     █     █     █  model   Qwen/Qwen3.5-2B
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:339] 
+(APIServer pid=201) INFO 11-12 04:27:48 [api_utils.py:273] non-default args: {'model_tag': 'Qwen/Qwen3.5-2B', 'enable_auto_tool_choice': True, 'tool_call_parser': 'qwen3_xml', 'port': 3185, 'model': 'Qwen/Qwen3.5-2B', 'trust_remote_code': True, 'dtype': 'float16', 'max_model_len': 32000, 'reasoning_parser': 'qwen3'}
+(APIServer pid=201) WARNING 11-12 04:27:48 [envs.py:2041] Unknown vLLM environment variable detected: VLLM_DTYPE
+(APIServer pid=201) Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Server probe not ready on port 3185. Trying 2 times...
+(APIServer pid=201) INFO 11-12 04:28:05 [model.py:619] Resolved architecture: Qwen3_5ForConditionalGeneration
+(APIServer pid=201) WARNING 11-12 04:28:05 [model.py:2114] Casting torch.bfloat16 to torch.float16.
+(APIServer pid=201) INFO 11-12 04:28:05 [model.py:1776] Using max model len 32000
+(APIServer pid=201) INFO 11-12 04:28:05 [vllm.py:1042] Asynchronous scheduling is enabled.
+(APIServer pid=201) INFO 11-12 04:28:05 [kernel.py:292] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(APIServer pid=201) [transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+Server probe not ready on port 3185. Trying 3 times...
+(EngineCore pid=337) INFO 11-12 04:28:38 [core.py:114] Initializing a V1 LLM engine (v0.25.0) with config: model='Qwen/Qwen3.5-2B', speculative_config=None, tokenizer='Qwen/Qwen3.5-2B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=32000, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='qwen3', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3.5-2B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::qwen_gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=337) INFO 11-12 04:28:42 [parallel_state.py:1607] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://172.19.2.2:60545 backend=nccl
+(EngineCore pid=337) INFO 11-12 04:28:42 [parallel_state.py:1942] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=337) WARNING 11-12 04:28:46 [topk_topp_sampler.py:62] FlashInfer top-p/top-k sampling unavailable: unsupported compute capability 7.5; falling back. Set VLLM_USE_FLASHINFER_SAMPLER=0 to silence.
+(EngineCore pid=337) [transformers] The `use_fast` parameter is deprecated and will be removed in a future version. Use `backend="torchvision"` instead of `use_fast=True`, or `backend="pil"` instead of `use_fast=False`.
+Server probe not ready on port 3185. Trying 4 times...
+(EngineCore pid=337) INFO 11-12 04:28:55 [gpu_model_runner.py:5209] Starting to load model Qwen/Qwen3.5-2B...
+(EngineCore pid=337) ERROR 11-12 04:28:56 [fa_utils.py:253] Cannot use FA version 2 is not supported due to FA2 is only supported on devices with compute capability >= 8
+(EngineCore pid=337) INFO 11-12 04:28:56 [mm_encoder_attention.py:373] Using AttentionBackendEnum.TORCH_SDPA for MMEncoderAttention.
+(EngineCore pid=337) INFO 11-12 04:28:56 [qwen_gdn_linear_attn.py:228] Using Triton/FLA GDN prefill kernel (requested=auto, head_k_dim=128).
+(EngineCore pid=337) INFO 11-12 04:28:56 [cuda.py:476] Using TRITON_ATTN attention backend out of potential backends: ['TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=337) Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Server probe not ready on port 3185. Trying 5 times...
+(EngineCore pid=337) INFO 11-12 04:29:31 [weight_utils.py:530] Time spent downloading weights for Qwen/Qwen3.5-2B: 32.750471 seconds
+(EngineCore pid=337) INFO 11-12 04:29:31 [weight_utils.py:849] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 4.24 GiB. Available RAM: 26.41 GiB.
+(EngineCore pid=337) INFO 11-12 04:29:31 [weight_utils.py:872] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=337) 
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+(EngineCore pid=337) 
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:02<00:00,  2.90s/it]
+(EngineCore pid=337) 
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:02<00:00,  2.90s/it]
+(EngineCore pid=337) 
+(EngineCore pid=337) INFO 11-12 04:29:34 [default_loader.py:430] Loading weights took 2.93 seconds
+(EngineCore pid=337) INFO 11-12 04:29:35 [gpu_model_runner.py:5306] Model loading took 4.25 GiB memory and 38.390695 seconds
+(EngineCore pid=337) INFO 11-12 04:29:35 [interface.py:890] Setting attention block size to 544 tokens to ensure that attention page size is >= mamba page size.
+(EngineCore pid=337) INFO 11-12 04:29:35 [interface.py:914] Padding mamba page size by 2.64% to ensure that mamba page size and attention page size are exactly equal.
+(EngineCore pid=337) INFO 11-12 04:29:36 [gpu_model_runner.py:6322] Encoder cache will be initialized with a budget of 16384 tokens, and profiled with 1 image items of the maximum feature size.
+Server probe not ready on port 3185. Trying 6 times...
+(EngineCore pid=337) INFO 11-12 04:30:22 [backends.py:1089] Using cache directory: /root/.cache/vllm/torch_compile_cache/99fee32be4/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=337) INFO 11-12 04:30:22 [backends.py:1148] Dynamo bytecode transform time: 7.16 s
+(EngineCore pid=337) [rank0]:W1112 04:30:23.604000 337 torch/_inductor/utils.py:1731] Not enough SMs to use max_autotune_gemm mode
+(EngineCore pid=337) INFO 11-12 04:30:25 [backends.py:378] Cache the graph of compile range (1, 2048) for later use
+Server probe not ready on port 3185. Trying 7 times...
+(EngineCore pid=337) INFO 11-12 04:30:49 [backends.py:393] Compiling a graph for compile range (1, 2048) takes 27.10 s
+(EngineCore pid=337) INFO 11-12 04:30:53 [decorators.py:708] saved AOT compiled function to /root/.cache/vllm/torch_compile_cache/torch_aot_compile/96565620d4ca471694cf6d62d4cf8483a9302c6bd63c88e09b858a1bf69d09b3/rank_0_0/model
+(EngineCore pid=337) INFO 11-12 04:30:53 [monitor.py:53] torch.compile took 38.16 s in total
+Server probe not ready on port 3185. Trying 8 times...
+Server probe not ready on port 3185. Trying 9 times...
+Server probe not ready on port 3185. Trying 10 times...
+Server probe not ready on port 3185. Trying 11 times...
+Server probe not ready on port 3185. Trying 12 times...
+Server probe not ready on port 3185. Trying 13 times...
+Server probe not ready on port 3185. Trying 14 times...
+Server probe not ready on port 3185. Trying 15 times...
+Server probe not ready on port 3185. Trying 16 times...
+Server probe not ready on port 3185. Trying 17 times...
+Server probe not ready on port 3185. Trying 18 times...
+Server probe not ready on port 3185. Trying 19 times...
+(EngineCore pid=337) INFO 11-12 04:36:51 [monitor.py:81] Initial profiling/warmup run took 357.39 s
+Server probe not ready on port 3185. Trying 20 times...
+(EngineCore pid=337) INFO 11-12 04:37:00 [gpu_model_runner.py:6534] Profiling CUDA graph memory: PIECEWISE=51 (largest=512), FULL=35 (largest=256)
+(EngineCore pid=337) INFO 11-12 04:37:10 [gpu_model_runner.py:6639] Estimated CUDA graph memory: 0.31 GiB total
+(EngineCore pid=337) INFO 11-12 04:37:10 [gpu_worker.py:538] Available KV cache memory: 6.56 GiB
+(EngineCore pid=337) INFO 11-12 04:37:10 [gpu_worker.py:553] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9200 is equivalent to --gpu-memory-utilization=0.8988 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9412. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=337) INFO 11-12 04:37:10 [kv_cache_utils.py:2146] GPU KV cache size: 544,000 tokens
+(EngineCore pid=337) INFO 11-12 04:37:10 [kv_cache_utils.py:2147] Maximum concurrency for 32,000 tokens per request: 17.00x
+(EngineCore pid=337) INFO 11-12 04:37:11 [qwen_triton_warmup.py:372] Warming up Qwen Triton kernels for model_type=qwen3_5_text.
+(EngineCore pid=337) INFO 11-12 04:37:15 [cutedsl_warmup.py:97] Skipping CuTeDSL warmup because no compile units were requested.
+(EngineCore pid=337) 
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   2%|▏         | 1/51 [00:00<00:05,  8.64it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   4%|▍         | 2/51 [00:00<00:05,  9.25it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):   6%|▌         | 3/51 [00:00<00:05,  9.15it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  10%|▉         | 5/51 [00:00<00:04, 11.49it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  14%|█▎        | 7/51 [00:00<00:03, 12.66it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  18%|█▊        | 9/51 [00:00<00:03, 13.79it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  22%|██▏       | 11/51 [00:00<00:02, 14.80it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  25%|██▌       | 13/51 [00:00<00:02, 15.73it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  29%|██▉       | 15/51 [00:01<00:02, 15.98it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  33%|███▎      | 17/51 [00:01<00:02, 16.43it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  37%|███▋      | 19/51 [00:01<00:01, 17.33it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  41%|████      | 21/51 [00:01<00:01, 18.07it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  45%|████▌     | 23/51 [00:01<00:01, 18.59it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  51%|█████     | 26/51 [00:01<00:01, 19.55it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  57%|█████▋    | 29/51 [00:01<00:01, 20.10it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  63%|██████▎   | 32/51 [00:01<00:00, 20.65it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  69%|██████▊   | 35/51 [00:02<00:00, 21.28it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  75%|███████▍  | 38/51 [00:02<00:00, 21.81it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  80%|████████  | 41/51 [00:02<00:00, 22.26it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  86%|████████▋ | 44/51 [00:02<00:00, 22.72it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  92%|█████████▏| 47/51 [00:02<00:00, 22.99it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE):  98%|█████████▊| 50/51 [00:02<00:00, 23.68it/s]
+Capturing CUDA graphs (mixed prefill-decode, PIECEWISE): 100%|██████████| 51/51 [00:02<00:00, 18.27it/s]
+(EngineCore pid=337) 
+Capturing CUDA graphs (decode, FULL):   0%|          | 0/35 [00:00<?, ?it/s]
+Capturing CUDA graphs (decode, FULL):   3%|▎         | 1/35 [00:00<00:07,  4.48it/s]
+Capturing CUDA graphs (decode, FULL):   6%|▌         | 2/35 [00:00<00:07,  4.51it/s]
+Capturing CUDA graphs (decode, FULL):  11%|█▏        | 4/35 [00:00<00:03,  8.63it/s]
+Capturing CUDA graphs (decode, FULL):  20%|██        | 7/35 [00:00<00:02, 12.86it/s]
+Capturing CUDA graphs (decode, FULL):  29%|██▊       | 10/35 [00:00<00:01, 15.47it/s]
+Capturing CUDA graphs (decode, FULL):  37%|███▋      | 13/35 [00:00<00:01, 17.46it/s]
+Capturing CUDA graphs (decode, FULL):  46%|████▌     | 16/35 [00:01<00:01, 18.76it/s]
+Capturing CUDA graphs (decode, FULL):  54%|█████▍    | 19/35 [00:01<00:00, 19.96it/s]
+Capturing CUDA graphs (decode, FULL):  63%|██████▎   | 22/35 [00:01<00:00, 21.03it/s]
+Capturing CUDA graphs (decode, FULL):  71%|███████▏  | 25/35 [00:03<00:02,  4.06it/s]
+Capturing CUDA graphs (decode, FULL):  77%|███████▋  | 27/35 [00:04<00:02,  2.93it/s]
+Capturing CUDA graphs (decode, FULL):  86%|████████▌ | 30/35 [00:04<00:01,  4.12it/s]
+Server probe not ready on port 3185. Trying 21 times...
+Capturing CUDA graphs (decode, FULL):  94%|█████████▍| 33/35 [00:04<00:00,  5.59it/s]
+Capturing CUDA graphs (decode, FULL): 100%|██████████| 35/35 [00:06<00:00,  2.83it/s]
+Capturing CUDA graphs (decode, FULL): 100%|██████████| 35/35 [00:06<00:00,  5.14it/s]
+(EngineCore pid=337) INFO 11-12 04:37:26 [gpu_model_runner.py:6707] Graph capturing finished in 11 secs, took 0.44 GiB
+(EngineCore pid=337) INFO 11-12 04:37:26 [gpu_worker.py:771] CUDA graph pool memory: 0.44 GiB (actual), 0.31 GiB (estimated), difference: 0.13 GiB (29.1%).
+(EngineCore pid=337) INFO 11-12 04:37:26 [jit_monitor.py:73] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=337) INFO 11-12 04:37:26 [core.py:337] init engine (profile, create kv cache, warmup model) took 471.17 s (compilation: 38.16 s)
+(EngineCore pid=337) INFO 11-12 04:37:27 [vllm.py:1042] Asynchronous scheduling is enabled.
+(EngineCore pid=337) INFO 11-12 04:37:27 [kernel.py:292] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(APIServer pid=201) INFO 11-12 04:37:27 [api_server.py:612] Supported tasks: ['generate']
+(APIServer pid=201) INFO 11-12 04:37:27 [parser_manager.py:37] "auto" tool choice has been enabled.
+(APIServer pid=201) INFO 11-12 04:37:28 [hf.py:548] Detected the chat template content format to be 'openai'. You can set `--chat-template-content-format` to override this.
+(APIServer pid=201) [transformers] Qwen3VL video processing does not apply the per-frame pixel cap the reference implementation (qwen-vl-utils) applies, so some videos cost far more tokens than they would there. In v5.22 the capped behavior will become the default and `cap_pixels_per_frame` will be removed. Pass `cap_pixels_per_frame=True` to adopt the reference behavior now, or `False` to keep the current behavior and silence this warning.
+(APIServer pid=201) INFO 11-12 04:37:53 [base.py:236] Multi-modal warmup completed in 24.807s
+(APIServer pid=201) INFO 11-12 04:37:55 [base.py:236] Readonly multi-modal warmup completed in 1.399s
+Server probe not ready on port 3185. Trying 22 times...
+(APIServer pid=201) INFO 11-12 04:37:55 [api_server.py:616] Starting vLLM server on http://0.0.0.0:3185
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:37] Available routes are:
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /openapi.json, Methods: HEAD, GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /docs, Methods: HEAD, GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: HEAD, GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /redoc, Methods: HEAD, GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /load, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /version, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /health, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /metrics, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /tokenize, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /detokenize, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/models, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /ping, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /ping, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /invocations, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/chat/completions, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/chat/completions/batch, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/responses, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/responses/{response_id}, Methods: GET
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/responses/{response_id}/cancel, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/completions, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/messages, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/messages/count_tokens, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /generative_scoring, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /scale_elastic_ep, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /is_scaling_elastic_ep, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/chat/completions/render, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/completions/render, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/chat/completions/derender, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /v1/completions/derender, Methods: POST
+(APIServer pid=201) INFO 11-12 04:37:55 [launcher.py:46] Route: /inference/v1/generate, Methods: POST
+(APIServer pid=201) INFO:     Started server process [201]
+(APIServer pid=201) INFO:     Waiting for application startup.
+(APIServer pid=201) INFO:     Application startup complete.
+(APIServer pid=201) INFO:     127.0.0.1:38076 - "GET /v1/models HTTP/1.1" 200 OK
+Server is ready!
+Initialized vllm backend.
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   3 apply_credit_card          pass=True  chặn=0 tok=27900 121.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   5 apply_credit_card          pass=False chặn=0 tok=28483 143.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   2 apply_credit_card          pass=False chặn=0 tok=41932 147.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   1 apply_credit_card          pass=True  chặn=0 tok=35598 195.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   4 apply_credit_card          pass=False chặn=0 tok=59052 217.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   7 apply_credit_card          pass=True  chặn=0 tok=34954 104.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   0 apply_credit_card          pass=True  chặn=0 tok=36028 293.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   6 apply_credit_card          pass=True  chặn=0 tok=52759 187.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  26 close_account              pass=False chặn=0 tok=28622 123.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  28 deposit_funds              pass=True  chặn=0 tok=28183 103.5s
+[frameguard] tiến độ 10/435 — 6 phút, còn ~249 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  29 deposit_funds              pass=True  chặn=0 tok=21368 120.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  30 deposit_funds              pass=True  chặn=0 tok=35340 113.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task   8 apply_credit_card          pass=True  chặn=0 tok=52267 328.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  35 exchange_foreign_currency  pass=False chặn=0 tok=20556 56.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  33 exchange_foreign_currency  pass=False chặn=0 tok=27996 130.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  31 deposit_funds              pass=True  chặn=0 tok=51240 231.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  27 close_account              pass=True  chặn=0 tok=75270 420.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  37 get_account_owed_balance   pass=True  chặn=0 tok=27608 112.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  32 deposit_funds              pass=True  chặn=0 tok=74851 355.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  34 exchange_foreign_currency  pass=False chặn=0 tok=84264 327.7s
+[frameguard] tiến độ 20/435 — 12 phút, còn ~259 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  36 exchange_foreign_currency  pass=True  chặn=0 tok=21678 240.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  38 get_account_owed_balance   pass=True  chặn=0 tok=72619 246.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  46 get_loan                   pass=True  chặn=0 tok=27497 72.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  45 get_loan                   pass=False chặn=0 tok=35598 113.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  42 get_loan                   pass=True  chặn=0 tok=43387 242.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  41 get_loan                   pass=False chặn=0 tok=72601 362.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  40 get_loan                   pass=False chặn=0 tok=51577 394.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  43 get_loan                   pass=False chặn=0 tok=59015 304.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  51 open_account               pass=True  chặn=0 tok=26958 57.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  49 get_loan                   pass=True  chặn=0 tok=42844 149.4s
+[frameguard] tiến độ 30/435 — 18 phút, còn ~247 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  47 get_loan                   pass=False chặn=0 tok=44757 250.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  52 open_account               pass=True  chặn=0 tok=20391 75.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  50 get_loan                   pass=True  chặn=0 tok=28974 137.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  55 open_account               pass=False chặn=0 tok=27590 92.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  54 open_account               pass=False chặn=0 tok=35691 132.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  53 open_account               pass=False chặn=0 tok=36726 181.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  48 get_loan                   pass=False chặn=0 tok=77110 409.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  58 pay_bill                   pass=False chặn=0 tok=42527 144.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  60 pay_bill                   pass=False chặn=0 tok=35178 103.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  59 pay_bill                   pass=True  chặn=0 tok=37544 192.2s
+[frameguard] tiến độ 40/435 — 23 phút, còn ~231 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  69 pay_loan                   pass=True  chặn=0 tok=45285 158.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  67 pay_loan                   pass=False chặn=0 tok=44913 201.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  70 pay_loan                   pass=True  chặn=0 tok=51368 222.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  74 set_account_information    pass=False chặn=0 tok=28878 78.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  57 pay_bill                   pass=False chặn=0 tok=76096 510.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  68 pay_loan                   pass=True  chặn=0 tok=76221 407.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  77 set_safety_box             pass=False chặn=0 tok=30232 127.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  78 set_safety_box             pass=False chặn=0 tok=29436 153.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  72 pay_loan                   pass=True  chặn=0 tok=76587 401.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  71 pay_loan                   pass=True  chặn=0 tok=76191 486.3s
+[frameguard] tiến độ 50/435 — 32 phút, còn ~243 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  75 set_account_information    pass=True  chặn=0 tok=78573 263.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  73 pay_loan                   pass=True  chặn=0 tok=75087 432.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  81 set_safety_box             pass=False chặn=0 tok=41428 106.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  80 set_safety_box             pass=True  chặn=0 tok=36256 176.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  82 set_safety_box             pass=False chặn=0 tok=36034 145.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  85 set_safety_box             pass=False chặn=0 tok=52507 187.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  84 set_safety_box             pass=True  chặn=0 tok=77771 291.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  79 set_safety_box             pass=True  chặn=0 tok=81787 453.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  88 set_safety_box             pass=False chặn=0 tok=36071 159.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  90 set_safety_box             pass=False chặn=0 tok=28234 138.9s
+[frameguard] tiến độ 60/435 — 39 phút, còn ~243 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  83 set_safety_box             pass=True  chặn=0 tok=76478 462.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  91 set_safety_box             pass=False chặn=0 tok=34943 152.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  86 set_safety_box             pass=True  chặn=0 tok=73465 368.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  92 set_safety_box             pass=False chặn=0 tok=36475 107.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  87 set_safety_box             pass=False chặn=0 tok=79268 413.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  95 set_safety_box             pass=False chặn=0 tok=41936 95.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  94 set_safety_box             pass=False chặn=0 tok=36697 161.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  96 set_safety_box             pass=False chặn=0 tok=29048 146.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  98 set_safety_box             pass=True  chặn=0 tok=50409 123.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  97 set_safety_box             pass=False chặn=0 tok=36733 197.6s
+[frameguard] tiến độ 70/435 — 44 phút, còn ~228 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  93 set_safety_box             pass=False chặn=0 tok=77810 298.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 102 set_safety_box             pass=True  chặn=0 tok=51319 158.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 101 set_safety_box             pass=False chặn=0 tok=74721 302.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 105 set_safety_box             pass=False chặn=0 tok=42599 131.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task  99 set_safety_box             pass=True  chặn=0 tok=52233 397.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 104 set_safety_box             pass=False chặn=0 tok=45180 242.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 106 set_safety_box             pass=False chặn=0 tok=44150 155.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 107 set_safety_box             pass=False chặn=0 tok=50974 146.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 111 transfer_funds             pass=True  chặn=0 tok=34001 79.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 100 set_safety_box             pass=True  chặn=0 tok=68342 588.3s
+[frameguard] tiến độ 80/435 — 52 phút, còn ~230 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 109 set_safety_box             pass=False chặn=0 tok=29941 236.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 108 set_safety_box             pass=False chặn=0 tok=73800 253.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 113 transfer_funds             pass=True  chặn=0 tok=20367 75.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 103 set_safety_box             pass=True  chặn=0 tok=76724 568.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 115 transfer_funds             pass=True  chặn=0 tok=41551 105.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 112 transfer_funds             pass=True  chặn=0 tok=36827 178.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 117 transfer_funds             pass=False chặn=0 tok=37090 121.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 116 transfer_funds             pass=True  chặn=0 tok=34839 132.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 118 transfer_funds             pass=False chặn=0 tok=28987 124.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 114 transfer_funds             pass=True  chặn=0 tok=42888 263.3s
+[frameguard] tiến độ 90/435 — 56 phút, còn ~216 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 110 set_safety_box             pass=False chặn=0 tok=57701 392.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 122 transfer_funds             pass=True  chặn=0 tok=43272 133.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 124 transfer_funds             pass=True  chặn=0 tok=49578 144.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 121 transfer_funds             pass=False chặn=0 tok=44346 241.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 127 transfer_funds             pass=False chặn=0 tok=49399 113.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 126 transfer_funds             pass=True  chặn=0 tok=42735 199.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 119 transfer_funds             pass=True  chặn=0 tok=74523 424.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 129 transfer_funds             pass=False chặn=0 tok=44516 136.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 125 transfer_funds             pass=True  chặn=0 tok=77750 378.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 131 transfer_funds             pass=True  chặn=0 tok=56848 128.2s
+[frameguard] tiến độ 100/435 — 64 phút, còn ~213 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 130 transfer_funds             pass=False chặn=0 tok=43216 181.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 123 transfer_funds             pass=False chặn=0 tok=76071 537.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 133 transfer_funds             pass=True  chặn=0 tok=49899 171.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 128 transfer_funds             pass=True  chặn=0 tok=73834 407.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   1 apply_credit_card          pass=True  chặn=0 tok=35598 190.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   3 apply_credit_card          pass=True  chặn=0 tok=27900 99.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   2 apply_credit_card          pass=True  chặn=1 tok=42318 166.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] none        r0 task 132 transfer_funds             pass=False chặn=0 tok=74979 289.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   0 apply_credit_card          pass=True  chặn=0 tok=36028 281.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   7 apply_credit_card          pass=True  chặn=0 tok=35128 121.1s
+[frameguard] tiến độ 110/435 — 70 phút, còn ~206 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  26 close_account              pass=True  chặn=1 tok=44680 129.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   6 apply_credit_card          pass=True  chặn=0 tok=52759 192.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   5 apply_credit_card          pass=True  chặn=1 tok=44509 279.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   4 apply_credit_card          pass=False chặn=1 tok=83935 348.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  28 deposit_funds              pass=True  chặn=0 tok=28183 113.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  29 deposit_funds              pass=True  chặn=0 tok=21368 119.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  30 deposit_funds              pass=True  chặn=0 tok=35334 95.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  34 exchange_foreign_currency  pass=True  chặn=0 tok=20514 69.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  31 deposit_funds              pass=True  chặn=0 tok=29671 167.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  33 exchange_foreign_currency  pass=False chặn=0 tok=27996 137.4s
+[frameguard] tiến độ 120/435 — 75 phút, còn ~197 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  35 exchange_foreign_currency  pass=True  chặn=1 tok=27734 57.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  37 get_account_owed_balance   pass=True  chặn=0 tok=27608 76.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  27 close_account              pass=True  chặn=0 tok=75270 412.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  36 exchange_foreign_currency  pass=True  chặn=0 tok=21678 188.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task   8 apply_credit_card          pass=True  chặn=2 tok=79163 622.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  32 deposit_funds              pass=True  chặn=0 tok=52775 362.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  38 get_account_owed_balance   pass=True  chặn=0 tok=72619 193.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  41 get_loan                   pass=True  chặn=0 tok=42449 179.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  46 get_loan                   pass=True  chặn=0 tok=27497 102.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  43 get_loan                   pass=True  chặn=1 tok=43745 169.7s
+[frameguard] tiến độ 130/435 — 81 phút, còn ~190 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  49 get_loan                   pass=True  chặn=0 tok=42844 142.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  47 get_loan                   pass=True  chặn=1 tok=65642 264.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  42 get_loan                   pass=True  chặn=4 tok=76547 372.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  51 open_account               pass=True  chặn=0 tok=26958 64.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  52 open_account               pass=True  chặn=0 tok=20391 72.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  50 get_loan                   pass=True  chặn=0 tok=28974 127.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  40 get_loan                   pass=True  chặn=6 tok=79683 598.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  48 get_loan                   pass=True  chặn=2 tok=77690 368.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  45 get_loan                   pass=True  chặn=6 tok=77801 516.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  58 pay_bill                   pass=True  chặn=1 tok=49416 85.6s
+[frameguard] tiến độ 140/435 — 88 phút, còn ~185 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  59 pay_bill                   pass=True  chặn=0 tok=45287 192.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  54 open_account               pass=True  chặn=7 tok=78610 405.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  55 open_account               pass=True  chặn=1 tok=60003 400.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  53 open_account               pass=True  chặn=5 tok=80070 436.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  60 pay_bill                   pass=True  chặn=3 tok=77200 319.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  69 pay_loan                   pass=True  chặn=0 tok=45285 162.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  57 pay_bill                   pass=True  chặn=5 tok=77920 534.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  67 pay_loan                   pass=False chặn=2 tok=73707 323.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  70 pay_loan                   pass=True  chặn=0 tok=51368 239.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  71 pay_loan                   pass=True  chặn=0 tok=35770 212.0s
+[frameguard] tiến độ 150/435 — 97 phút, còn ~184 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  68 pay_loan                   pass=True  chặn=0 tok=76220 410.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  74 set_account_information    pass=False chặn=1 tok=69404 322.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  72 pay_loan                   pass=True  chặn=6 tok=80140 380.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  73 pay_loan                   pass=True  chặn=0 tok=74515 372.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  75 set_account_information    pass=True  chặn=2 tok=77398 337.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  77 set_safety_box             pass=True  chặn=0 tok=74563 412.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  80 set_safety_box             pass=True  chặn=0 tok=36256 166.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  81 set_safety_box             pass=True  chặn=2 tok=77367 250.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  79 set_safety_box             pass=True  chặn=0 tok=37296 299.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  78 set_safety_box             pass=False chặn=5 tok=88908 502.4s
+[frameguard] tiến độ 160/435 — 107 phút, còn ~184 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  82 set_safety_box             pass=True  chặn=0 tok=73315 332.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  84 set_safety_box             pass=True  chặn=0 tok=77771 262.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  83 set_safety_box             pass=True  chặn=1 tok=76620 437.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  88 set_safety_box             pass=True  chặn=3 tok=73046 225.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  85 set_safety_box             pass=True  chặn=2 tok=75570 349.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  86 set_safety_box             pass=True  chặn=0 tok=73465 351.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  87 set_safety_box             pass=True  chặn=3 tok=75899 380.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  90 set_safety_box             pass=True  chặn=4 tok=67834 386.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  95 set_safety_box             pass=True  chặn=1 tok=51947 144.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  91 set_safety_box             pass=True  chặn=1 tok=73398 369.6s
+[frameguard] tiến độ 170/435 — 117 phút, còn ~182 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  94 set_safety_box             pass=False chặn=5 tok=84642 338.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  92 set_safety_box             pass=True  chặn=1 tok=68998 390.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  93 set_safety_box             pass=True  chặn=2 tok=77417 397.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  97 set_safety_box             pass=True  chặn=0 tok=29011 146.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  98 set_safety_box             pass=True  chặn=0 tok=50409 135.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 102 set_safety_box             pass=True  chặn=0 tok=51319 152.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  96 set_safety_box             pass=True  chặn=7 tok=89916 459.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 101 set_safety_box             pass=True  chặn=2 tok=75150 320.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 100 set_safety_box             pass=True  chặn=0 tok=78271 495.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 103 set_safety_box             pass=True  chặn=0 tok=75577 513.6s
+[frameguard] tiến độ 180/435 — 128 phút, còn ~181 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task  99 set_safety_box             pass=True  chặn=4 tok=78498 626.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 105 set_safety_box             pass=True  chặn=1 tok=78106 362.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 107 set_safety_box             pass=True  chặn=1 tok=67255 181.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 104 set_safety_box             pass=True  chặn=1 tok=82835 497.3s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 111 transfer_funds             pass=True  chặn=0 tok=34001 65.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 108 set_safety_box             pass=True  chặn=0 tok=50784 184.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 113 transfer_funds             pass=True  chặn=0 tok=20367 70.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 106 set_safety_box             pass=True  chặn=1 tok=79661 481.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 112 transfer_funds             pass=True  chặn=0 tok=36821 199.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 115 transfer_funds             pass=True  chặn=0 tok=41551 103.8s
+[frameguard] tiến độ 190/435 — 133 phút, còn ~171 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 116 transfer_funds             pass=True  chặn=0 tok=34839 118.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 114 transfer_funds             pass=True  chặn=0 tok=42888 265.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 109 set_safety_box             pass=True  chặn=3 tok=88744 461.7s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 117 transfer_funds             pass=False chặn=2 tok=44893 232.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 110 set_safety_box             pass=True  chặn=3 tok=82097 485.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 122 transfer_funds             pass=True  chặn=0 tok=43272 107.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 124 transfer_funds             pass=True  chặn=0 tok=49578 133.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 119 transfer_funds             pass=True  chặn=0 tok=74523 402.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 118 transfer_funds             pass=True  chặn=5 tok=78204 453.6s
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 126 transfer_funds             pass=True  chặn=0 tok=42735 151.9s
+[frameguard] tiến độ 200/435 — 141 phút, còn ~166 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 125 transfer_funds             pass=True  chặn=1 tok=73782 300.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 127 transfer_funds             pass=True  chặn=1 tok=66817 168.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 121 transfer_funds             pass=True  chặn=6 tok=76999 544.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 123 transfer_funds             pass=True  chặn=2 tok=75804 490.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 131 transfer_funds             pass=True  chặn=0 tok=56848 135.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 130 transfer_funds             pass=True  chặn=4 tok=73736 243.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 133 transfer_funds             pass=True  chặn=0 tok=49880 165.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 129 transfer_funds             pass=True  chặn=1 tok=79874 460.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   1 apply_credit_card          pass=True  chặn=0 tok=35598 168.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   0 apply_credit_card          pass=True  chặn=0 tok=36028 264.8s
+[frameguard] tiến độ 210/435 — 149 phút, còn ~160 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 132 transfer_funds             pass=True  chặn=6 tok=79498 310.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   3 apply_credit_card          pass=True  chặn=0 tok=27900 93.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] bare        r0 task 128 transfer_funds             pass=False chặn=3 tok=82387 683.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   2 apply_credit_card          pass=True  chặn=1 tok=66501 300.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   7 apply_credit_card          pass=True  chặn=0 tok=35128 115.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   6 apply_credit_card          pass=True  chặn=0 tok=52759 188.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  26 close_account              pass=True  chặn=1 tok=51921 123.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   5 apply_credit_card          pass=True  chặn=2 tok=53918 320.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   4 apply_credit_card          pass=True  chặn=3 tok=78127 390.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  29 deposit_funds              pass=True  chặn=0 tok=21368 123.1s
+[frameguard] tiến độ 220/435 — 156 phút, còn ~153 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  30 deposit_funds              pass=True  chặn=0 tok=35334 130.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  27 close_account              pass=True  chặn=0 tok=74085 306.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  28 deposit_funds              pass=True  chặn=0 tok=52112 339.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task   8 apply_credit_card          pass=True  chặn=1 tok=87358 408.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  34 exchange_foreign_currency  pass=True  chặn=0 tok=20540 73.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  35 exchange_foreign_currency  pass=True  chặn=1 tok=34952 70.5s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  33 exchange_foreign_currency  pass=False chặn=0 tok=27996 174.2s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  37 get_account_owed_balance   pass=True  chặn=0 tok=27608 74.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  31 deposit_funds              pass=True  chặn=0 tok=51323 286.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  38 get_account_owed_balance   pass=True  chặn=0 tok=72619 202.6s
+[frameguard] tiến độ 230/435 — 163 phút, còn ~145 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  32 deposit_funds              pass=True  chặn=0 tok=76794 500.4s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  40 get_loan                   pass=True  chặn=1 tok=74604 335.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  43 get_loan                   pass=True  chặn=1 tok=44041 157.6s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  41 get_loan                   pass=False chặn=0 tok=72601 378.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  36 exchange_foreign_currency  pass=True  chặn=0 tok=78998 497.8s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  42 get_loan                   pass=True  chặn=5 tok=79234 405.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  46 get_loan                   pass=True  chặn=0 tok=27494 122.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  51 open_account               pass=True  chặn=0 tok=26958 63.9s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: user (None)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  47 get_loan                   pass=True  chặn=1 tok=58393 231.1s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  52 open_account               pass=True  chặn=0 tok=20391 64.8s
+[frameguard] tiến độ 240/435 — 170 phút, còn ~138 phút
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  49 get_loan                   pass=True  chặn=0 tok=42845 167.0s
+[31m[Info] Starting a new simulation for bank ...[0m
+
+
+Active agent: bank assistant (Qwen/Qwen3.5-2B)
+[frameguard] alignment   r0 task  50 get_loan                   pass=True  chặn=0 tok=28974 146.0s
