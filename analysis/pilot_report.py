@@ -59,16 +59,23 @@ def after_block(x):
     nxt = log[idx + 1]
     if nxt["tool"] == first["tool"] and nxt.get("args") == first.get("args"):
         return "lặp lại đúng lời gọi"
-    if nxt["tool"] in set(first.get("repair", [])) | set(first.get("alternative", [])):
+    g = first.get("goal_info") or {}
+    followed = set(first.get("repair", [])) | set(first.get("alternative", [])) | set(g.get("goal_steps") or [])
+    if g.get("relation") in ("not_needed", "optional"):    # chế độ goal: phản hồi bảo bỏ X, làm bước của G (hoặc gọi G)
+        followed = set(g.get("goal_steps") or []) | {g.get("goal")}
+    if nxt["tool"] in followed:
         return "làm theo chuỗi sửa"
     return "đổi hướng khác"
+
+
+MODE_ORDER = ("none", "bare", "reason", "next_action", "template", "alignment", "goal", "purpose", "goal_ex", "purpose_v2")
 
 
 def table_modes(data, title, run=0):
     print(f"\n== {title} (lần chạy r{run}) ==")
     print(f"{'chế độ':10s} {'n':>4s} {'pass':>14s} {'hoàn thành':>14s} {'từ chối đúng':>14s} {'bị chặn≥1':>10s} "
-          f"{'phục hồi':>14s} {'lặp chặn':>8s} {'token/task':>10s} {'giây/task':>9s}")
-    for mode in [m for m in ("none", "bare", "reason", "next_action", "template", "alignment") if m in data]:
+          f"{'phục hồi':>14s} {'lặp chặn':>8s} {'nhắc':>5s} {'token/task':>10s} {'giây/task':>9s}")
+    for mode in [m for m in MODE_ORDER if m in data]:
         rows = list(data[mode].get(run, {}).values())
         if not rows:
             continue
@@ -80,13 +87,14 @@ def table_modes(data, title, run=0):
         print(f"{mode:10s} {len(S):4d} {pct(sum(s['success_fixed'] for s in S), len(S)):>14s} "
               f"{pct(sum(s['success_fixed'] for s in ss), len(ss)):>14s} {pct(sum(s['success_fixed'] for s in sf), len(sf)):>14s} "
               f"{len(bl):10d} {pct(sum(s['success_fixed'] for s in bl), len(bl)):>14s} "
-              f"{sum(s['n_repeat_blocked'] for s in S):8d} {sum(tok) / len(S):10.0f} {sum(s['seconds'] for s in S) / len(S):9.1f}")
+              f"{sum(s['n_repeat_blocked'] for s in S):8d} {sum(s.get('n_reminders', 0) for s in S):5d} {sum(tok) / len(S):10.0f} {sum(s['seconds'] for s in S) / len(S):9.1f}")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("model_dir")
     ap.add_argument("--control", default=None)
+    ap.add_argument("--budget", default=None, help="thư mục đối chứng ngân sách (max_actions/max_turns nới rộng)")
     a = ap.parse_args()
     data = load(a.model_dir)
     print(f"Thư mục: {a.model_dir} — chế độ: {sorted(data)}")
@@ -94,13 +102,18 @@ def main():
     table_modes(data, "1. Kết quả theo chế độ")
     if a.control:
         table_modes(load(a.control), "2. Đối chứng: model phát lại (Gate không có model thích nghi)")
+    if a.budget:
+        table_modes(load(a.budget), "2b. Đối chứng ngân sách (max_actions 20, max_turns 40): bare có đuổi kịp next_action không")
 
     # 3. McNemar trên r0, cùng tập task
     print("\n== 3. So cặp McNemar (r0). b = A pass & B trượt, c = ngược lại ==")
     none0 = data.get("none", {}).get(0, {})
     would = {t for t, x in none0.items() if x["summary"].get("n_would_block", 0) > 0}
     for A, B in (("alignment", "bare"), ("alignment", "none"), ("bare", "none"), ("template", "bare"), ("alignment", "template"),
-                 ("next_action", "bare"), ("alignment", "next_action"), ("template", "next_action")):
+                 ("next_action", "bare"), ("alignment", "next_action"), ("template", "next_action"),
+                 ("goal", "next_action"), ("purpose", "next_action"), ("goal", "purpose"), ("goal", "alignment"),
+                 ("purpose", "alignment"), ("goal_ex", "goal"), ("goal_ex", "next_action"),
+                 ("purpose_v2", "next_action"), ("purpose_v2", "purpose"), ("purpose_v2", "goal")):
         if A not in data or B not in data:
             continue
         da, db = data[A].get(0, {}), data[B].get(0, {})
@@ -122,12 +135,39 @@ def main():
         tot = sum(cnt.values())
         print(f"  {mode:10s} " + ", ".join(f"{k}: {pct(v, tot)}" for k, v in cnt.most_common()))
 
+    # 4b. Theo loại lần chặn đầu tiên: chặn chính goal hay chặn tool phụ (nhóm mà phản hồi theo goal nhắm tới)
+    print("\n== 4b. Pass theo loại lần chặn đầu tiên (r0): goal / tool phụ ==")
+    for mode in [m for m in MODE_ORDER if m in data and m != "none"]:
+        grp = collections.defaultdict(list)
+        for x in data[mode].get(0, {}).values():
+            first = next((e for e in x.get("gate_log", []) if e.get("decision") == "blocked"), None)
+            if first is None:
+                continue
+            k = "chặn goal" if first["tool"] == x["summary"]["goal"] else "chặn tool phụ"
+            grp[k].append(x["summary"]["success_fixed"])
+        print(f"  {mode:10s} " + " | ".join(f"{k}: {pct(sum(v), len(v))}" for k, v in sorted(grp.items())))
+
     # 5. Lý do trượt
     print("\n== 5. Lý do trượt (tiêu chí oracle không đạt, đếm trên task trượt, r0) ==")
     for mode in data:
         fails = [x for x in data[mode].get(0, {}).values() if not x["summary"]["success_fixed"]]
         cnt = collections.Counter(k for x in fails for k in CRIT if not x["evaluation"].get(k, True))
         print(f"  {mode:10s} trượt {len(fails):3d}: " + ", ".join(f"{k}={v}" for k, v in cnt.most_common()))
+
+    # 7. Nhắc nghĩa vụ Existence(G) (goal_ex): có kéo model làm G ở task nên từ chối không (chỉ số chặn chiều xấu của H4)
+    if "goal_ex" in data:
+        print("\n== 7. goal_ex: task có nhắc Existence(G) (r0) ==")
+        X = list(data["goal_ex"].get(0, {}).values())
+        rem = [x for x in X if x["summary"].get("n_reminders", 0) > 0]
+        ss = [x for x in rem if x["summary"]["should_succeed"]]
+        sf = [x for x in rem if not x["summary"]["should_succeed"]]
+        base = data.get("goal", {}).get(0, {})
+        print(f"  có nhắc: {len(rem)}/{len(X)} task | nên thành công pass {pct(sum(x['summary']['success_fixed'] for x in ss), len(ss))}"
+              f" | nên từ chối, từ chối đúng {pct(sum(x['summary']['success_fixed'] for x in sf), len(sf))}")
+        if base:
+            for lab, grp in (("nên thành công", ss), ("nên từ chối", sf)):
+                ts = [x["summary"]["task"] for x in grp if x["summary"]["task"] in base]
+                print(f"  cùng task ở goal ({lab}): pass {pct(sum(base[t]['summary']['success_fixed'] for t in ts), len(ts))}")
 
     # 6. Nhiễu giữa các lần chạy
     print("\n== 6. Nhiễu giữa các lần chạy lặp ==")

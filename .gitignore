@@ -17,3 +17,6 @@ external/
 
 # Kết quả chạy model (lớn)
 runs/
+
+# Ghi chú làm việc cục bộ cho Claude Code
+CLAUDE.md

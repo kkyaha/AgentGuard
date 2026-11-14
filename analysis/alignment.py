@@ -58,8 +58,10 @@ def record(rs, hist, name, args, res):
     C.add_implied(rs, name, args, hist)
 
 
-def repair(f, binding, hist):
-    """Chuỗi model move tối thiểu để công thức tiền điều kiện f được thỏa."""
+def repair(f, binding, hist, exclude=frozenset()):
+    """Chuỗi model move tối thiểu để công thức tiền điều kiện f được thỏa.
+    exclude: tool không được đề xuất (agent không có tool đó, hoặc tool tạo trạng thái đã thất bại). Ở nhánh `or`,
+    bỏ các nhánh cần tool trong exclude nếu còn nhánh khác; nếu mọi nhánh đều cần thì giữ nhánh rẻ nhất."""
     if f is None:
         return []
     if isinstance(f, Act):
@@ -67,10 +69,12 @@ def repair(f, binding, hist):
             return []
         args = {k: binding[v] for k, v in f.params.items() if binding.get(v) is not None}
         ask = [k for k, v in f.params.items() if binding.get(v) is None]
-        return _dedupe(repair(f.sub, binding, hist) + [Move(f.name, args, ask)])
+        return _dedupe(repair(f.sub, binding, hist, exclude) + [Move(f.name, args, ask)])
     if f.kind == "and":
-        return _dedupe([m for p in f.parts for m in repair(p, binding, hist)])
-    return min((repair(p, binding, hist) for p in f.parts), key=_cost)
+        return _dedupe([m for p in f.parts for m in repair(p, binding, hist, exclude)])
+    opts = [repair(p, binding, hist, exclude) for p in f.parts]
+    ok = [o for o in opts if not any(m.tool in exclude for m in o)]
+    return min(ok or opts, key=_cost)
 
 
 def _dedupe(moves):
@@ -82,13 +86,13 @@ def _dedupe(moves):
     return out
 
 
-def align_activation(rs, name, args, hist):
-    """Alignment cho lời gọi X=name(args) trên lịch sử hiện tại. Rỗng = không chặn."""
+def align_activation(rs, name, args, hist, exclude=frozenset()):
+    """Alignment cho lời gọi X=name(args) trên lịch sử hiện tại. Rỗng = không chặn (exclude không đổi điều này)."""
     f = rs.precondition(name)
     if not isinstance(f, Act):
         return []
     binding = {v: args.get(k) for k, v in f.params.items()}
-    return repair(f.sub, binding, hist)
+    return repair(f.sub, binding, hist, exclude)
 
 
 # ---------------------------------------------------------------- phản hồi
@@ -136,7 +140,7 @@ def goal_args(rs):
     return {k: uk[v] for k, v in node.items() if v in uk}
 
 
-def ideal_follower(rs, max_rounds=10):
+def ideal_follower(rs, max_rounds=10, exclude=frozenset()):
     """Agent chỉ làm theo alignment; tham số cần hỏi lấy từ user_known (người dùng trả lời đúng).
     Sau khi đủ tiền điều kiện, quyết định gọi goal theo kết quả kiểm tra thật (mô phỏng model đọc kết quả đúng)."""
     from env.evaluator import evaluator_function_directed_graph
@@ -163,7 +167,7 @@ def ideal_follower(rs, max_rounds=10):
 
     refused = False
     for _ in range(max_rounds):
-        moves = align_activation(rs, rs.goal, gargs, hist)
+        moves = align_activation(rs, rs.goal, gargs, hist, exclude)
         if not moves:
             break
         n_blocks += 1
@@ -173,6 +177,11 @@ def ideal_follower(rs, max_rounds=10):
                 # tham số hỏi người dùng: khớp theo tên tham số trong user_known
                 if k in uk:
                     a[k] = uk[k]
+            if m.tool in state_tools(rs.domain) and any(k not in a for k in m.ask_user):
+                # khách không có thông tin xác thực (vd identification) -> agent thật không login thiếu tham số mà từ chối.
+                # Chỉ áp cho tool tạo trạng thái: tham số khác (vd major) agent đọc được từ kết quả tool trước.
+                refused = True
+                break
             res = do(m.tool, a)
             if m.tool in state_tools(rs.domain) and not C.succeeded(res):
                 refused = True             # bước kiểm tra thất bại -> phản hồi bảo từ chối
@@ -195,7 +204,7 @@ def ideal_follower(rs, max_rounds=10):
 
 
 # ---------------------------------------------------------------- chạy
-def run(domain):
+def run(domain, exclude=frozenset()):
     bad = C.unsolvable(domain)
     data = None
     # (1) lần chặn đầu tiên ở model nhỏ
@@ -242,7 +251,7 @@ def run(domain):
         if i in bad:
             continue
         rs = load_rules(domain, t["task"])
-        r = ideal_follower(rs)
+        r = ideal_follower(rs, exclude=exclude)
         ideal[r["reason"]] += 1
         ideal[f"blocks={r['blocks']}"] += 1
         if not r["ok"] and len(fails) < 5:
@@ -251,10 +260,13 @@ def run(domain):
 
 
 if __name__ == "__main__":
-    domains = sys.argv[1:] or sorted(os.listdir(os.path.join(SOPBENCH, "output")))
+    # --no-db-dump: agent không có internal_get_database (SOPBench mặc định provide_database_getter=False) -> không đề xuất
+    args = [x for x in sys.argv[1:] if not x.startswith("--")]
+    excl = frozenset({DB_DUMP}) if "--no-db-dump" in sys.argv else frozenset()
+    domains = args or sorted(os.listdir(os.path.join(SOPBENCH, "output")))
     out = {}
     for dom in domains:
-        stat, match, ideal, fails, example = run(dom)
+        stat, match, ideal, fails, example = run(dom, excl)
         n = sum(v for k, v in ideal.items() if not k.startswith("blocks="))
         print(f"\n===== {dom} =====")
         print(f"  (3) agent lý tưởng theo alignment: pass {ideal['pass']}/{n} = {ideal['pass'] / max(1, n):.1%}   "

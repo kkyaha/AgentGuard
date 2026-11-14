@@ -69,6 +69,8 @@ _orig_handle = core.Swarm.handle_tool_calls
 
 def _gated_handle(self, tool_calls, functions, context_variables, debug):
     G = getattr(TLS, "gate", None)
+    if G:   # tool thật của agent (giống function_map của Swarm.handle_tool_calls)
+        G.set_tools([f.__name__ if callable(f) else f["function"]["name"] for f in functions])
     msgs = []
     for tc in tool_calls:
         name = tc.function.name
@@ -89,6 +91,29 @@ def _gated_handle(self, tool_calls, functions, context_variables, debug):
 
 
 core.Swarm.handle_tool_calls = _gated_handle
+
+# ------------------------------------------------------------------ goal_ex: nhắc nghĩa vụ Existence(G) ở lượt người dùng
+# Agent trả lời bằng văn bản (không tool call) -> Swarm chuyển sang người dùng giả (câu cố định). Nếu Gate có lời nhắc,
+# ghép vào CUỐI câu của người dùng, có nhãn "[Procedure monitor]". Không đổi lượt của agent, không sửa mã SOPBench.
+_orig_completion = core.Swarm.get_chat_completion
+
+
+def _completion_with_reminder(self, agent, history, debug=False):
+    out = _orig_completion(self, agent, history, debug)
+    G = getattr(TLS, "gate", None)
+    if G is None or G.mode != "goal_ex" or agent.name != "user" or not history:
+        return out
+    last = history[-1]
+    if last.get("sender") == "user" or last.get("tool_calls"):
+        return out
+    msg = G.existence_reminder()
+    if msg:
+        m = out.choices[0].message
+        m.content = (m.content or "") + "\n\n" + msg
+    return out
+
+
+core.Swarm.get_chat_completion = _completion_with_reminder
 
 
 def count_tokens(handler):
@@ -160,7 +185,7 @@ def sop_args(a):
     argv = ["--domain", a.domain, "--assistant_model", a.model or "replay", "--tool_call_mode", "fc",
             "--tool_list", "full", "--env_mode", "prompt", "--default_constraint_option", "full",
             "--constraint_descr_format", "structured", "--assistant_temperature", "0.0", "--assistant_top_p", "0.01",
-            "--assistant_max_tokens", str(a.max_tokens), "--max_num_turns", "20", "--max_num_actions", str(a.max_actions)]
+            "--assistant_max_tokens", str(a.max_tokens), "--max_num_turns", str(a.max_turns), "--max_num_actions", str(a.max_actions)]
     old = sys.argv
     sys.argv = ["run_simulation.py"] + argv
     try:
@@ -222,7 +247,7 @@ def run_one(ctx, mode, i, run_k):
         try:
             old = json.load(open(f))
             oc = old.get("config", {})
-            if all(oc.get(k) == ctx["config"][k] for k in ("code_version", "max_tokens", "max_actions", "vllm_dtype")):
+            if all(oc.get(k) == ctx["config"][k] for k in ("code_version", "max_tokens", "max_actions", "max_turns", "vllm_dtype")):
                 return old["summary"]
         except Exception:
             pass
@@ -254,6 +279,7 @@ def run_one(ctx, mode, i, run_k):
     s = {"task": i, "run": run_k, "goal": task["user_goal"], "should_succeed": task["action_should_succeed"], "mode": mode,
          "success": ev["success"], "success_fixed": ev["success_fixed"], "success_with_blocked": ev["success_with_blocked"],
          "n_blocked": gs["n_blocked"], "n_repeat_blocked": gs["n_repeat_blocked"], "n_would_block": gs["n_would_block"],
+         "n_reminders": gs["n_reminders"],
          "n_tool_calls": ev["num_function_calls"], "tokens": dict(TLS.tokens), "error": err,
          "seconds": round(time.time() - t0, 1)}
     os.makedirs(os.path.dirname(f), exist_ok=True)
@@ -281,6 +307,7 @@ def main():
     p.add_argument("--repeat_runs", default="1,2")
     p.add_argument("--max_tokens", type=int, default=1024)
     p.add_argument("--max_actions", type=int, default=10)
+    p.add_argument("--max_turns", type=int, default=20, help="số tin nhắn tối đa (cả kết quả tool); đối chứng ngân sách: 40")
     p.add_argument("--num_gpus", type=int, default=1)
     p.add_argument("--out", default=os.path.join(ROOT, "runs"))
     a = p.parse_args()
@@ -294,7 +321,7 @@ def main():
            "config": {"model": run_name, "domain": a.domain, "code_version": code_version(), "vllm_version": vllm_version(),
                       "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
                       "thinking": {"qwen": os.getenv("QWEN35_THINKING"), "gemma": os.getenv("GEMMA4_THINKING")},
-                      "max_tokens": a.max_tokens, "max_actions": a.max_actions, "workers": a.workers,
+                      "max_tokens": a.max_tokens, "max_actions": a.max_actions, "max_turns": a.max_turns, "workers": a.workers,
                       "blocked_calls_count_toward_max_actions": True}}
     log(f"[frameguard] code_version={ctx['config']['code_version']} vllm={ctx['config']['vllm_version']} workers={a.workers}")
     ids = select(a)

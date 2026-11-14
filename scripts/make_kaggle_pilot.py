@@ -10,6 +10,17 @@ PRESETS = {
                       title="FrameGuard — PILOT phần còn lại (alignment + chạy lặp, thinking BẬT)"),
     "e2": dict(PART="all", MODES="none,bare,next_action,template,alignment", THINKING="False", out="kaggle_e2_nothink.ipynb",
                title="FrameGuard — E2: thinking TẮT (bank, none/bare/next_action/template/alignment)"),
+    # E2b: như E2 + phản hồi theo goal; code mới (không đề xuất tool agent không có) -> chạy lại MỌI chế độ để so cặp.
+    "e2b": dict(PART="all", MODES="none,bare,next_action,template,alignment,goal,purpose", THINKING="False",
+                out="kaggle_e2b_nothink.ipynb", OUTDIR="runs_e2b_nothink",
+                GPU0_SET="none,bare,next_action,template",   # GPU0 420 lượt; GPU1 alignment/goal/purpose 315 + chạy lặp 120
+                title="FrameGuard — E2b: thinking TẮT, phản hồi theo goal (bank, 7 chế độ)"),
+    # E3: nhắc nghĩa vụ Existence(G) (goal_ex), purpose_v2, liên quan theo alignment; chạy lại next_action/goal cùng code.
+    # Đối chứng ngân sách: bare/next_action với max_actions 20, max_turns 40 (chia đều 2 GPU, chạy sau job chính).
+    "e3": dict(PART="all", MODES="next_action,goal,goal_ex,purpose_v2", THINKING="False",
+               out="kaggle_e3_nothink.ipynb", OUTDIR="runs_e3_nothink", GPU0_SET="next_action,goal",
+               BUDGET_MODES="bare,next_action", REPEAT="False",
+               title="FrameGuard — E3: thinking TẮT, nhắc Existence + purpose_v2 + đối chứng ngân sách (bank)"),
 }
 P = PRESETS[PRESET]
 
@@ -38,7 +49,8 @@ md("""
 
 **Chạy gì (một lần khởi động vLLM, chạy song song):**
 - 105 task sạch của bank × các chế độ `{MODES}` (105 lượt mỗi chế độ)
-- Chạy lặp thêm 2 lần × 30 task × `none` / `alignment` = 120 lượt (đo nhiễu)
+- Chạy lặp (nếu bật): 2 lần × 30 task × `none` / `alignment` = 120 lượt (đo nhiễu)
+- Đối chứng ngân sách (nếu bật): `{BUDGET_MODES}` với max_actions 20 / max_turns 40, chạy sau job chính
 
 **Trước khi chạy** (cột phải → *Session options*): **GPU T4 x2**, **Internet On**.
 Rồi **Save Version → Save & Run All (Commit)** — không chạy từng ô ở editor. Ước tính: thinking bật ~4–5 giờ, thinking tắt nhanh hơn nhiều (2 GPU).
@@ -63,9 +75,11 @@ if THINKING:
     os.environ["QWEN35_THINKING"] = "1"; os.environ["GEMMA4_THINKING"] = "1"
 else:
     os.environ["QWEN35_NOTHINK"] = "1"        # Qwen3.5: tắt thinking; Gemma-4: mặc định không thinking
-OUT = "runs" if THINKING else "runs_nothink"  # mỗi cấu hình một thư mục -> không lẫn / không dùng nhầm kết quả
+OUT = "{OUTDIR}" or ("runs" if THINKING else "runs_nothink")  # mỗi cấu hình một thư mục -> không lẫn kết quả
 # os.environ["VLLM_MAX_MODEL_LEN"] = "16384"  # bật nếu thiếu bộ nhớ (mặc định SOPBench: 32000)
 WORK = "/kaggle/working/frameguard"
+REPEAT = {REPEAT}                # chạy lặp đo nhiễu (none/alignment × 30 task × 2)
+BUDGET_MODES = "{BUDGET_MODES}"  # đối chứng ngân sách; "" = không chạy
 """)
 
 code("""
@@ -117,7 +131,7 @@ import subprocess, time, os
 base = ["python", "adapters/sopbench/runner.py", "--model", MODEL, "--domain", DOMAIN, "--workers", str(WORKERS),
         "--out", f"{WORK}/{OUT}"]
 all_modes = MODES
-GPU0_SET = ("none", "bare", "next_action")  # cân tải: GPU0 3 chế độ (315 lượt), GPU1 template+alignment+chạy lặp (330 lượt)
+GPU0_SET = tuple("{GPU0_SET}".split(","))  # cân tải giữa 2 GPU; GPU1 nhận các chế độ còn lại + chạy lặp
 gpu0_modes = ",".join(m for m in MODES.split(",") if m in GPU0_SET)
 gpu1_modes = ",".join(m for m in MODES.split(",") if m not in GPU0_SET)
 if PART == "remaining":
@@ -135,6 +149,24 @@ elif USE_2_GPUS:
 else:
     jobs = [("0", base + ["--modes", all_modes, "--task_set", "clean", "--repeat_set", "pilot_repeat",
                           "--repeat_modes", "none,alignment", "--repeat_runs", "1,2"], "/kaggle/working/pilot_gpu0.log")]
+if not REPEAT:   # bỏ chạy lặp
+    def _strip(c):
+        if "--repeat_set" not in c:
+            return c
+        i = c.index("--repeat_set")
+        return c[:i] + c[i + 6:]
+    jobs = [(g, _strip(c), l) for g, c, l in jobs]
+if BUDGET_MODES:  # đối chứng ngân sách: chia các chế độ cho các GPU, chạy nối tiếp SAU job chính
+    import shlex
+    bm = BUDGET_MODES.split(",")
+    for j, (g, c, l) in enumerate(list(jobs)):
+        mine = bm[j::len(jobs)]
+        if not mine:
+            continue
+        bcmd = ["python", "adapters/sopbench/runner.py", "--model", MODEL, "--domain", DOMAIN, "--workers", str(WORKERS),
+                "--out", f"{WORK}/{OUT}_budget", "--modes", ",".join(mine), "--task_set", "clean",
+                "--max_actions", "20", "--max_turns", "40"]
+        jobs[j] = (g, ["bash", "-c", shlex.join(c) + " && " + shlex.join(bcmd)], l)
 # Dọn tiến trình cũ nếu ô này bị chạy lại (tránh 2 vLLM tranh 1 GPU). Kết quả đã xong vẫn được giữ và bỏ qua.
 subprocess.run("pkill -f adapters/sopbench/runner.py; pkill -f 'vllm serve'", shell=True)
 time.sleep(5)
@@ -143,7 +175,7 @@ t0 = time.time()
 for gpu, cmd, logf in jobs:
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=gpu)
     procs.append((gpu, subprocess.Popen(cmd, cwd=WORK, env=env, stdout=open(logf, "a"), stderr=subprocess.STDOUT), logf))
-    print(f"Đã khởi động GPU{gpu}: {' '.join(cmd[8:])}", flush=True)
+    print(f"Đã khởi động GPU{gpu}: {' '.join(cmd[8:]) if cmd[0] != 'bash' else cmd[2][:300]}", flush=True)
     if gpu != jobs[-1][0]:
         print("  chờ 90 giây trước khi khởi động GPU tiếp theo (tránh 2 vLLM nạp model cùng lúc)...", flush=True)
         time.sleep(90)
@@ -159,13 +191,14 @@ while any(p.poll() is None for _, p, _ in procs):
               + (f" | {prog[-1].strip()}" if prog else ""), flush=True)
 for gpu, p, logf in procs:
     print(f"GPU{gpu} kết thúc, mã thoát {p.returncode}")
-    !grep -E "code_version|lượt chạy|LỖI|DỪNG|Traceback|^mode|^none|^bare|^alignment" {logf} | tail -25
+    !grep -E "code_version|lượt chạy|LỖI|DỪNG|Traceback|^mode|^none|^bare|^next_action|^template|^alignment|^goal|^purpose" {logf} | tail -30
 """)
 
 md("## Báo cáo")
 code("""
 print("=" * 25, "BÁO CÁO PILOT", "=" * 25)
-!cd /kaggle/working/frameguard && python analysis/pilot_report.py {OUT}/{DOMAIN}/{MODEL}
+BUD = f"--budget {OUT}_budget/{DOMAIN}/{MODEL}" if BUDGET_MODES else ""
+!cd /kaggle/working/frameguard && python analysis/pilot_report.py {OUT}/{DOMAIN}/{MODEL} {BUD}
 print("=" * 25, "HẾT BÁO CÁO", "=" * 25)
 """)
 
@@ -180,12 +213,18 @@ md("""
   chạy sẵn trên máy): none 36% → bare/alignment 45% chỉ nhờ việc chặn. Phản hồi có tác dụng thật khi **vượt 45%** và `alignment` > `bare`.
 - **Bảng 3:** McNemar `alignment vs bare`: p < 0.05 là khác biệt có ý nghĩa thống kê.
 - **Bảng 4:** sau khi bị chặn, model *làm theo chuỗi sửa* bao nhiêu %.
+- **Bảng 4b:** pass theo lần chặn đầu tiên là goal hay tool phụ — `goal`/`purpose` nhắm vào nhóm "chặn tool phụ".
 - **Bảng 6:** nhiễu giữa các lần chạy — để biết chênh lệch nào là thật.
+- **E3 — Bảng 2b:** bare có thêm ngân sách có đuổi kịp next_action không (nếu có: lợi thế của phản hồi một phần là tiết kiệm lời gọi).
+- **E3 — Bảng 7:** goal_ex nhắc ở bao nhiêu task; từ chối đúng ở task nên từ chối không được giảm (so cùng task ở goal).
+- **E3 — McNemar:** `goal_ex vs goal` (H4), `purpose_v2 vs next_action` (H5).
 """)
 
 for c in cells:
     c["source"] = ["".join(c["source"]).replace("{TITLE}", P["title"]).replace("{PART}", P["PART"])
-                   .replace("{MODES}", P["MODES"]).replace("{THINKING}", P["THINKING"])]
+                   .replace("{MODES}", P["MODES"]).replace("{THINKING}", P["THINKING"])
+                   .replace("{OUTDIR}", P.get("OUTDIR", "")).replace("{GPU0_SET}", P.get("GPU0_SET", "none,bare,next_action"))
+                   .replace("{BUDGET_MODES}", P.get("BUDGET_MODES", "")).replace("{REPEAT}", P.get("REPEAT", "True"))]
     c["source"] = c["source"][0].splitlines(True)
 nb = {"cells": cells, "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
                                    "language_info": {"name": "python"},
