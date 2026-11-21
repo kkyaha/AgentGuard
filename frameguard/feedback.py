@@ -6,7 +6,16 @@ Tiếng Anh vì prompt và tool của SOPBench là tiếng Anh.
 """
 import json
 
-MODES = ("none", "bare", "reason", "next_action", "template", "alignment", "goal", "purpose", "goal_ex", "purpose_v2")
+MODES = ("none", "bare", "reason", "next_action", "template", "alignment", "goal", "purpose", "goal_ex", "purpose_v2",
+         "alignment_1", "alignment_dag", "alignment_phi", "alignment_static")
+# alignment_1: đúng câu chữ của `alignment` (tham số, quy tắc từ chối, Alternative) nhưng chuỗi sửa cắt còn bước đầu.
+#   next_action vs alignment_1 -> tác dụng của tham số + quy tắc từ chối; alignment_1 vs alignment -> thuần độ dài chuỗi (H2b).
+# Thang biểu diễn luật (giữ câu chữ của `alignment`, chỉ đổi luật Gate dùng; xem gate.py):
+#   alignment_dag : S1 — đồ thị phụ thuộc thuần: Precedence thỏa khi Y đã được gọi (mọi tham số, mọi kết quả)
+#   alignment     : S2 — MP-DECLARE Precedence + điều kiện tương quan (tham số; kết quả của tool tạo trạng thái)
+#   alignment_phi : S3 — S2 + điều kiện kích hoạt φa (CẬN TRÊN: Gate đánh giá φa trên bản sao hệ thống strict)
+# alignment_static: quyết định chặn như `alignment`, nhưng chuỗi in ra là TOÀN BỘ tiền điều kiện của X theo SOP (lịch sử rỗng),
+#   không phải phần còn thiếu theo prefix alignment -> alignment_static vs alignment đo giá trị của "tính trên tiền tố trace".
 
 
 def _args(a):
@@ -126,6 +135,14 @@ def _render_purpose(blocked, moves, failed_state, g):
     return "\n".join(lines)
 
 
+def render_data_block(blocked, preds):
+    """Chế độ `alignment_phi`: mọi Precedence đã thỏa nhưng điều kiện kích hoạt (dữ liệu) của X sai → chặn X (Absence | ¬φa)."""
+    names = ", ".join(f"`{p}`" for p in preds) if preds else "a required condition"
+    return (f"Error: the call to `{blocked}` was blocked. The required checks are done, but their results show that the "
+            f"conditions for `{blocked}` are not met with these arguments ({names}). If the arguments match what the user "
+            f"asked for, do not call `{blocked}` again; tell the user the request cannot be completed.")
+
+
 def render(mode, blocked, violations, moves, failed_state, alternative=(), ginfo=None, impossible=()):
     """
     blocked       : tên tool bị chặn
@@ -174,7 +191,9 @@ def render(mode, blocked, violations, moves, failed_state, alternative=(), ginfo
                 lines.append(f"- You must successfully call one of {alts} before `{blocked}`.")
         lines.append("Do not repeat the blocked call unchanged.")
         return "\n".join(lines) + alt
-    if mode == "alignment":
+    if mode in ("alignment", "alignment_1", "alignment_dag", "alignment_phi", "alignment_static"):
+        if mode == "alignment_1":
+            moves = moves[:1]
         if failed_state:   # giữ nguyên câu chữ như E2
             return (f"Error: the call to `{blocked}` was blocked. `{failed_state[0]}` was called but did not succeed, "
                     f"so `{blocked}` is not allowed. Do not retry it; tell the user the request cannot be completed.")

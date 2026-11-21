@@ -63,6 +63,54 @@ def _popen(cmd, *a, **k):
 
 lh.subprocess.Popen = _popen
 
+# ------------------------------------------------------------------ API bên ngoài thay cho vLLM cục bộ
+# API_BASE_URL (vd https://api.novita.ai/v3/openai), API_MODEL (tên model ở nhà cung cấp), API_KEY_ENV (tên biến môi trường
+# chứa key, mặc định API_KEY), API_PROVIDER_ORDER (chỉ OpenRouter: ghim nhà cung cấp, cấm fallback).
+# Backend vẫn là "vllm" -> định dạng tin nhắn, tool call, cờ thinking đi đúng đường code đã dùng ở mọi thí nghiệm.
+# Nhà cung cấp có thể chuyển hướng ngầm sang model khác (DeepInfra: Qwen2.5-7B -> Qwen3-14B) -> mỗi phản hồi kiểm trường
+# `model`; khác model yêu cầu thì DỪNG toàn bộ lượt chạy.
+API_BASE_URL = os.getenv("API_BASE_URL")
+API_SERVED = set()
+
+
+def _norm_model(s):
+    s = str(s or "").lower()
+    return s.split("/", 1)[1] if "/" in s else s
+
+
+def _api_init(self, num_gpus, gpu_memory_utilization):
+    from openai import OpenAI
+    key_env = os.getenv("API_KEY_ENV", "API_KEY")
+    if not os.getenv(key_env):
+        raise SystemExit(f"[frameguard] thiếu biến môi trường {key_env} (API key)")
+    self.model_name_huggingface = os.getenv("API_MODEL", self.model_name_huggingface)
+    self.process = None
+    self.client = OpenAI(base_url=API_BASE_URL, api_key=os.environ[key_env], max_retries=5, timeout=300)
+    comp = self.client.chat.completions
+    orig, want = comp.create, self.model_name_huggingface
+    order = [x for x in os.getenv("API_PROVIDER_ORDER", "").split(",") if x]
+
+    def create(**params):
+        if order:
+            eb = dict(params.get("extra_body") or {})
+            eb["provider"] = {"order": order, "allow_fallbacks": False}
+            params["extra_body"] = eb
+        out = orig(**params)
+        served = getattr(out, "model", None)
+        if served and _norm_model(served) != _norm_model(want):
+            log(f"[frameguard] DỪNG: yêu cầu model {want!r} nhưng nhà cung cấp trả về {served!r} (chuyển hướng?)")
+            os._exit(3)
+        if served and served not in API_SERVED:
+            API_SERVED.add(served)
+            log(f"[frameguard] API trả về model: {served}")
+        return out
+    comp.create = create
+    log(f"[frameguard] API: {API_BASE_URL} model={want} provider_order={order or '-'}")
+
+
+if API_BASE_URL:
+    lh.OpenAIHandler._init_vllm = _api_init
+
 # ------------------------------------------------------------------ Gate gắn vào Swarm.handle_tool_calls (theo luồng)
 _orig_handle = core.Swarm.handle_tool_calls
 
@@ -182,7 +230,7 @@ def vllm_version():
 
 # ------------------------------------------------------------------ dữ liệu
 def sop_args(a):
-    argv = ["--domain", a.domain, "--assistant_model", a.model or "replay", "--tool_call_mode", "fc",
+    argv = ["--domain", a.domain, "--assistant_model", a.model or "replay", "--tool_call_mode", a.tool_call_mode,
             "--tool_list", "full", "--env_mode", "prompt", "--default_constraint_option", "full",
             "--constraint_descr_format", "structured", "--assistant_temperature", "0.0", "--assistant_top_p", "0.01",
             "--assistant_max_tokens", str(a.max_tokens), "--max_num_turns", str(a.max_turns), "--max_num_actions", str(a.max_actions)]
@@ -247,7 +295,8 @@ def run_one(ctx, mode, i, run_k):
         try:
             old = json.load(open(f))
             oc = old.get("config", {})
-            if all(oc.get(k) == ctx["config"][k] for k in ("code_version", "max_tokens", "max_actions", "max_turns", "vllm_dtype")):
+            if (all(oc.get(k) == ctx["config"][k] for k in ("code_version", "max_tokens", "max_actions", "max_turns", "vllm_dtype"))
+                    and oc.get("tool_call_mode", "fc") == ctx["config"]["tool_call_mode"]):
                 return old["summary"]
         except Exception:
             pass
@@ -255,7 +304,7 @@ def run_one(ctx, mode, i, run_k):
     task = copy.deepcopy(tasks[i])
     handler = ReplayHandler(a.domain, a.fake_replay, i) if a.fake_replay else ctx["handler"]
     assistant = Agent(name="domain assistant", client=handler, temperature=0.0, top_p=0.01,
-                      max_tokens=a.max_tokens, tool_call_mode="fc", instructions="", functions=[])
+                      max_tokens=a.max_tokens, tool_call_mode=a.tool_call_mode, instructions="", functions=[])
     user = Agent(name="user", client=None, default_response="", response_repeat=True)
     TLS.gate = Gate(load_rules(a.domain, task), mode)
     TLS.tokens = collections.Counter()
@@ -302,30 +351,46 @@ def main():
     p.add_argument("--task_set", default="smoke", help="smoke | clean | pilot_repeat | danh sách id cách nhau dấu phẩy")
     p.add_argument("--runs", default="0", help="chỉ số lần chạy, vd '0' hoặc '1,2' (chạy lặp)")
     p.add_argument("--workers", type=int, default=1, help="số task chạy song song")
+    p.add_argument("--order", default="mode", choices=["mode", "task"], help="task: xen kẽ chế độ theo task (dùng khi có thể bị cắt giữa chừng)")
     p.add_argument("--repeat_set", default=None, help="tập task chạy lặp thêm, vd pilot_repeat")
     p.add_argument("--repeat_modes", default="none,alignment")
     p.add_argument("--repeat_runs", default="1,2")
-    p.add_argument("--max_tokens", type=int, default=1024)
+    p.add_argument("--tool_call_mode", default="fc", choices=["fc", "react"],
+                   help="fc: function calling gốc (Qwen3.5, Gemma-4); react: ReAct dạng văn bản (Qwen2.5-7B, Llama-3.1-8B như số công bố)")
+    p.add_argument("--max_tokens", type=int, default=None, help="mặc định 1024 (fc), 512 (react, như cấu hình công bố)")
     p.add_argument("--max_actions", type=int, default=10)
     p.add_argument("--max_turns", type=int, default=20, help="số tin nhắn tối đa (cả kết quả tool); đối chứng ngân sách: 40")
     p.add_argument("--num_gpus", type=int, default=1)
     p.add_argument("--out", default=os.path.join(ROOT, "runs"))
     a = p.parse_args()
+    if a.max_tokens is None:
+        a.max_tokens = 512 if a.tool_call_mode == "react" else 1024
+    if a.fake_replay and a.fake_replay.endswith("-mode_react") and a.tool_call_mode != "react":
+        p.error("--fake_replay ...-mode_react cần --tool_call_mode react")
 
     dep_innate_full, default_dep_full, default_dep_full_descr = task_default_dep_full(
         a.domain, "full", "structured", dependency_verb_dep_orig=True)
-    run_name = f"replay_{a.fake_replay}" if a.fake_replay else a.model
+    run_name = f"replay_{a.fake_replay}" if a.fake_replay else a.model + ("-react" if a.tool_call_mode == "react" else "")
     ctx = {"a": a, "args": sop_args(a), "tasks": load_tasks(a.domain), "run_name": run_name,
            "dep_innate_full": dep_innate_full, "default_dep_full": default_dep_full,
            "default_dep_full_descr": default_dep_full_descr,
            "config": {"model": run_name, "domain": a.domain, "code_version": code_version(), "vllm_version": vllm_version(),
                       "vllm_dtype": os.getenv("VLLM_DTYPE", "bfloat16"),
                       "thinking": {"qwen": os.getenv("QWEN35_THINKING"), "gemma": os.getenv("GEMMA4_THINKING")},
-                      "max_tokens": a.max_tokens, "max_actions": a.max_actions, "max_turns": a.max_turns, "workers": a.workers,
-                      "blocked_calls_count_toward_max_actions": True}}
+                      "tool_call_mode": a.tool_call_mode, "max_tokens": a.max_tokens, "max_actions": a.max_actions, "max_turns": a.max_turns, "workers": a.workers,
+                      "blocked_calls_count_toward_max_actions": True,
+                      "api": ({"base_url": API_BASE_URL, "model": os.getenv("API_MODEL"),
+                               "provider_order": os.getenv("API_PROVIDER_ORDER"),
+                               "quantization": os.getenv("API_QUANTIZATION")} if API_BASE_URL else None)}}
     log(f"[frameguard] code_version={ctx['config']['code_version']} vllm={ctx['config']['vllm_version']} workers={a.workers}")
     ids = select(a)
-    jobs = [(m, i, int(k)) for k in a.runs.split(",") for m in a.modes.split(",") for i in ids]
+    if a.order == "task":   # xen kẽ theo task (thứ tự xáo cố định) -> dừng giữa chừng vẫn có các cặp chế độ trên cùng tập task
+        import random
+        ids = list(ids)
+        random.Random(0).shuffle(ids)
+        jobs = [(m, i, int(k)) for k in a.runs.split(",") for i in ids for m in a.modes.split(",")]
+    else:
+        jobs = [(m, i, int(k)) for k in a.runs.split(",") for m in a.modes.split(",") for i in ids]
     log(f"[frameguard] {len(jobs)} lượt chạy chính: {len(ids)} task × {a.modes} × runs {a.runs}")
     if a.repeat_set:
         rids = select(argparse.Namespace(task_set=a.repeat_set, domain=a.domain))

@@ -8,8 +8,8 @@ import collections, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "analysis"))
 import conformance as C  # noqa: E402
 from alignment import align_activation, record, state_tools, repair, _cost  # noqa: E402
-from declare_rules import Act, Op  # noqa: E402
-from frameguard.feedback import render, render_existence  # noqa: E402
+from declare_rules import Act, Op, new_strict_system, pred_kind  # noqa: E402
+from frameguard.feedback import render, render_existence, render_data_block  # noqa: E402
 
 
 def _contains(f, name):
@@ -37,6 +37,14 @@ class Gate:
         self.blocked_counts = collections.Counter()
         self.reminded = False               # goal_ex: đã nhắc nghĩa vụ Existence(G) chưa (tối đa 1 lần)
         self.log = []                       # một dòng cho mỗi tool call đi qua Gate
+        # Thang biểu diễn luật (feedback.py): S1 đồ thị thuần / S2 MP-DECLARE Precedence (mặc định) / S3 + φa (cận trên).
+        self.dag = mode == "alignment_dag"
+        self.phi = None
+        if mode == "alignment_phi":
+            # CẬN TRÊN, trái nguyên tắc "Gate không dùng hệ thống strict": bản sao strict chạy song song, nhận đúng các lời gọi
+            # đã thực thi, chỉ để đánh giá điều kiện kích hoạt φa của action. Không bao giờ dùng ở chế độ khác.
+            self.strict = new_strict_system(rules)
+            self.phi = self.strict.evaluation_get_dependency_evaluator()
 
     def set_tools(self, names):
         """Danh sách tool thật của agent (lấy từ harness lúc chạy)."""
@@ -47,8 +55,13 @@ class Gate:
         if name not in self.rs.action_params or name in self.unavailable or not isinstance(args, dict):
             return None
         moves = align_activation(self.rs, name, args, self.hist, self.unavailable)
+        if self.dag and moves:
+            # S1: Precedence chỉ hỏi "Y đã được gọi chưa" (bỏ tương quan tham số); kết quả không xét (xem observe).
+            # Câu chữ giữ như alignment: bước còn thiếu theo S1, tham số điền như S2.
+            need = {m.tool for m in align_activation(self.rs, name, {}, self.hist, self.unavailable)}
+            moves = [m for m in moves if m.tool in need]
         if not moves:
-            return None
+            return self._check_phi(name, args) if self.phi is not None else None
         if self.mode == "none":
             # chế độ bóng: ghi lại "lẽ ra chặn ở đâu" để so với các chế độ có Gate, nhưng không chặn
             self.log.append({"tool": name, "args": args, "decision": "would_block", "repair": [m.tool for m in moves]})
@@ -72,13 +85,50 @@ class Gate:
             ginfo = {"required_by": self.required_by(name)}
         elif self.mode == "purpose_v2":
             ginfo = {"required_by": self.required_by_v2(name, failed)}
-        msg = render(self.mode, name, viol, moves, failed, alt, ginfo, impossible)
+        shown = moves
+        if self.mode == "alignment_static":
+            # Đối chứng: in toàn bộ tiền điều kiện của X như SOP (lịch sử rỗng); chặn / failed / impossible vẫn tính trên tiền tố thật.
+            shown = align_activation(self.rs, name, args, C.History(), self.unavailable) or moves
+        msg = render(self.mode, name, viol, shown, failed, alt, ginfo, impossible)
         self.log.append({"tool": name, "args": args, "decision": "blocked",
                          "violations": [list(v[:1]) + [list(v[1])] + [v[2]] for v in viol],
-                         "repair": [m.tool for m in moves], "alternative": [m.tool for m in alt],
+                         "repair": [m.tool for m in moves], "shown": [m.tool for m in shown], "alternative": [m.tool for m in alt],
                          "failed_state": failed, "impossible": impossible, "repeat_index": self.blocked_counts[key], "message": msg,
                          "goal_info": _ginfo_log(ginfo)})
         return msg
+
+    def _check_phi(self, name, args):
+        """S3 (alignment_phi): mọi Precedence đã thỏa; đánh giá φa của X trên bản sao strict. Sai → chặn (Absence | ¬φa)."""
+        try:
+            ok = self.phi.process(method_str=name, **args)
+        except Exception:
+            return None                      # thiếu tham số / vị từ không đánh giá được: không chặn
+        if ok is not False:
+            return None
+        failed = self._failed_data_leaves(self.rs.dep_full.get(name), args)
+        msg = render_data_block(name, list(dict.fromkeys(failed)))
+        key = (name, C.norm(args))
+        self.blocked_counts[key] += 1
+        self.log.append({"tool": name, "args": args, "decision": "blocked",
+                         "violations": [["DataCondition", failed, "data"]], "repair": [], "alternative": [],
+                         "failed_state": [], "impossible": [], "repeat_index": self.blocked_counts[key], "message": msg,
+                         "goal_info": None})
+        return msg
+
+    def _failed_data_leaves(self, dep, args):
+        """Vị từ dữ liệu làm φa sai: đi theo and/chain; nhánh or/gate sai cả cụm thì không nêu tên (không có lá duy nhất)."""
+        if not dep:
+            return []
+        try:
+            if self.phi._process(dep, **args):
+                return []
+        except Exception:
+            return []
+        if dep[0] == "single":
+            return [dep[1]] if pred_kind(self.rs.domain, dep[1].replace("not ", "")) == "data" else []
+        if dep[0] in ("and", "chain"):
+            return list(dict.fromkeys(x for d in dep[1] for x in self._failed_data_leaves(d, args)))
+        return []
 
     # ------------------------------------------------------------ phản hồi theo goal
     def _seen_values(self, args):
@@ -221,7 +271,17 @@ class Gate:
             self.log.append({"tool": name, "args": args, "decision": "unavailable", "result": str(content)[:300]})
             return
         if name in self.rs.action_params and isinstance(args, dict):
-            record(self.rs, self.hist, name, args, C.try_eval(content))
+            if self.dag:   # S1: mọi lời gọi đã thực thi đều thỏa Precedence, kể cả login/xác thực thất bại
+                self.hist.any[name].append(args)
+                self.hist.conformant[name].append(args)
+                C.add_implied(self.rs, name, args, self.hist)
+            else:
+                record(self.rs, self.hist, name, args, C.try_eval(content))
+            if self.phi is not None and hasattr(self.strict, name):
+                try:
+                    getattr(self.strict, name)(**args)
+                except Exception:
+                    pass
         self.log.append({"tool": name, "args": args, "decision": "allowed", "result": str(content)[:300]})
 
     def summary(self):
