@@ -6,8 +6,6 @@ Gate chặn và trả phản hồi sinh từ template DECLARE / alignment để 
 
 Câu hỏi nghiên cứu (Agentic BPM): phản hồi theo ngữ nghĩa ràng buộc có giúp model open-weight 2–8B
 hoàn thành task sau khi bị chặn không? Benchmark đầu tiên: SOPBench; tiếp theo SOP-Bench (Amazon), τ²-bench.
-Mô tả đầy đủ, câu hỏi nghiên cứu và quyết định thiết kế: [`CLAUDE.md`](CLAUDE.md).
-Kết quả hiện tại: [`analysis/FINDINGS.md`](analysis/FINDINGS.md).
 
 ## Cài đặt
 ```bash
@@ -26,5 +24,5 @@ python3 -I analysis/failure_taxonomy.py external/SOPBench/output   # phân loạ
 - `analysis/declare_rules.py` — `load_rules(domain, task)`: luật SOPBench → DECLARE / MP-DECLARE
 - `analysis/conformance.py` — phát lại trajectory, ghi vi phạm theo template, kiểm định với oracle SOPBench
 - `analysis/alignment.py` — alignment tối ưu (chuỗi sửa tối thiểu) và phản hồi `template` / `alignment`
-- `analysis/out/` — kết quả JSON
+- `analysis/out/` — kết quả JSON (sinh lại bằng các script trên; không đưa lên git)
 - `external/` — mã ngoài (không đưa lên git)

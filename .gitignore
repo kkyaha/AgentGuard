@@ -20,3 +20,12 @@ runs/
 
 # Ghi chú làm việc cục bộ cho Claude Code
 CLAUDE.md
+
+# Kết quả, file nặng, notebook sinh tự động, ghi chú làm việc (giữ cục bộ, không đưa lên git)
+*.zip
+analysis/out/
+*.pptx
+notebooks/
+scripts/make_kaggle_*.py
+docs/
+analysis/FINDINGS.md
